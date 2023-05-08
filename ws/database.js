@@ -1,10 +1,5 @@
 const mongoose = require("mongoose");
-const URI = "";
-
-mongoose.set("useNewUrlParser", true);
-mongoose.set("useFindAndModify", false);
-mongoose.set("useCreateIndex", true);
-mongoose.set("useUnifiedTopology", true);
+const URI = "mongodb+srv://Admin:A3yXuSj9zmbjbgra@clustermauapresence.kid9oyx.mongodb.net/";
 
 mongoose
   .connect(URI)
