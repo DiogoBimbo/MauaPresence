@@ -1,21 +1,31 @@
-const express = require("express");
-const app = express();
-const morgan = require("morgan");
+const express = require('express');
+const morgan = require('morgan');
 const cors = require('cors');
+const exphbs = require('express-handlebars');
+const app = express();
+const bodyParser = require('body-parser');
+const admin = require('./src/routes/admin.routes')
 require('./database');
 
-// middlewares
-app.use(morgan("dev"));
-app.use(express.json());
-app.use(cors());
+//Configs
+  // Template Engine
+  app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
+  app.set('view engine', 'handlebars')
 
-// variables
-app.set("port", 8000);
+  // Middlewares
+  app.use(morgan('dev'));
+  app.use(express.json());  
+  app.use(cors());
+  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(bodyParser.json())
 
-// routes
-//app.use(require('./src/routes/adm.routes'));
+  // Variables
+  app.set("port", 8000);
 
-app.listen(app.get("port"), () => {
-  console.log(`WS escutando na porta ${app.get("port")}`);
-});
+  // Routes
+  app.use('/admin',admin);
+
+  app.listen(app.get('port'), () => {
+    console.log(`WS escutando na porta ${app.get("port")}`);
+  });
 
