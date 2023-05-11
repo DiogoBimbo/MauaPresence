@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 
-const Admin = require('../models/admininistrador');
+const Admin = require('../models/administrador');
 const Curso = require('../models/curso');
 const Materia = require('../models/materia');
 const CursoMateria = require('../models/cursoMateria');
@@ -16,7 +16,7 @@ router.get('/', async (req,res) => {
 });
 
 // rota login usando jwt e bcrypt
-router.post("/login", async (req, res) => {
+router.post('/login', async (req, res) => {
     try {
       const { email, password } = req.body;
       const admin = await Admin.findOne({ email });
