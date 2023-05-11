@@ -1,31 +1,35 @@
-const express = require('express');
-const morgan = require('morgan');
-const cors = require('cors');
-const exphbs = require('express-handlebars');
+const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
+const exphbs = require("express-handlebars");
 const app = express();
-const bodyParser = require('body-parser');
-const admin = require('./src/routes/admin.routes')
-require('./database');
+const bodyParser = require("body-parser");
+const admin = require("./src/routes/admin.routes");
+const aluno = require("./src/routes/aluno.routes");
+const professor = require("./src/routes/professor.routes");
+require("./database");
 
 //Configs
-  // Template Engine
-  app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
-  app.set('view engine', 'handlebars')
+// Template Engine
+app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
-  // Middlewares
-  app.use(morgan('dev'));
-  app.use(express.json());  
-  app.use(cors());
-  app.use(bodyParser.urlencoded({extended: true}));
-  app.use(bodyParser.json())
+// Middlewares
+app.use(morgan("dev"));
+app.use(express.json());
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-  // Variables
-  app.set("port", 8000);
+// Variables
+app.set("port", 8000);
 
-  // Routes
-  app.use('/admin',admin);
+// Routes
+app.use("/admin", admin);
+app.use("/aluno", aluno);
+app.use("/professor", professor);
 
-  app.listen(app.get('port'), () => {
-    console.log(`WS escutando na porta ${app.get("port")}`);
-  });
 
+app.listen(app.get("port"), () => {
+  console.log(`WS escutando na porta ${app.get("port")}`);
+});
