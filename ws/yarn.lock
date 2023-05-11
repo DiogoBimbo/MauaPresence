@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+"@hapi/hoek@^9.0.0":
+  version "9.3.0"
+  resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.3.0.tgz#8368869dcb735be2e7f5cb7647de78e167a251fb"
+
+"@hapi/topo@^5.0.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@hapi/topo/-/topo-5.1.0.tgz#dc448e332c6c6e37a4dc02fd84ba8d44b9afb012"
+  dependencies:
+    "@hapi/hoek" "^9.0.0"
+
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/@isaacs/cliui/-/cliui-8.0.2.tgz#b37667b7bc181c168782259bab42474fbf52b550"
@@ -30,6 +40,20 @@
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
+
+"@sideway/address@^4.1.3":
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/@sideway/address/-/address-4.1.4.tgz#03dccebc6ea47fdc226f7d3d1ad512955d4783f0"
+  dependencies:
+    "@hapi/hoek" "^9.0.0"
+
+"@sideway/formula@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@sideway/formula/-/formula-3.0.1.tgz#80fcbcbaf7ce031e0ef2dd29b1bfc7c3f583611f"
+
+"@sideway/pinpoint@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@sideway/pinpoint/-/pinpoint-2.0.0.tgz#cff8ffadc372ad29fd3f78277aeb29e632cc70df"
 
 "@types/node@*":
   version "20.1.0"
@@ -184,6 +208,10 @@ concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
 
+connect-flash@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/connect-flash/-/connect-flash-0.1.1.tgz#d8630f26d95a7f851f9956b1e8cc6732f3b6aa30"
+
 console-control-strings@^1.0.0, console-control-strings@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
@@ -201,6 +229,10 @@ content-type@~1.0.4:
 cookie-signature@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/cookie-signature/-/cookie-signature-1.0.6.tgz#e303a882b342cc3ee8ca513a79999734dab3ae2c"
+
+cookie@0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.2.tgz#0e41f24de5ecf317947c82fc789e06a884824432"
 
 cookie@0.5.0:
   version "0.5.0"
@@ -290,6 +322,19 @@ express-handlebars@^7.0.7:
     glob "^10.1.0"
     graceful-fs "^4.2.11"
     handlebars "^4.7.7"
+
+express-session@^1.17.3:
+  version "1.17.3"
+  resolved "https://registry.yarnpkg.com/express-session/-/express-session-1.17.3.tgz#14b997a15ed43e5949cb1d073725675dd2777f36"
+  dependencies:
+    cookie "0.4.2"
+    cookie-signature "1.0.6"
+    debug "2.6.9"
+    depd "~2.0.0"
+    on-headers "~1.0.2"
+    parseurl "~1.3.3"
+    safe-buffer "5.2.1"
+    uid-safe "~2.1.5"
 
 express@^4.18.2:
   version "4.18.2"
@@ -497,6 +542,16 @@ jackspeak@^2.0.3:
     "@isaacs/cliui" "^8.0.2"
   optionalDependencies:
     "@pkgjs/parseargs" "^0.11.0"
+
+joi@^17.9.2:
+  version "17.9.2"
+  resolved "https://registry.yarnpkg.com/joi/-/joi-17.9.2.tgz#8b2e4724188369f55451aebd1d0b1d9482470690"
+  dependencies:
+    "@hapi/hoek" "^9.0.0"
+    "@hapi/topo" "^5.0.0"
+    "@sideway/address" "^4.1.3"
+    "@sideway/formula" "^3.0.1"
+    "@sideway/pinpoint" "^2.0.0"
 
 jsonwebtoken@^9.0.0:
   version "9.0.0"
@@ -777,6 +832,10 @@ qs@6.11.0:
   dependencies:
     side-channel "^1.0.4"
 
+random-bytes@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/random-bytes/-/random-bytes-1.0.0.tgz#4f68a1dc0ae58bd3fb95848c30324db75d64360b"
+
 range-parser@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
@@ -991,6 +1050,12 @@ type-is@~1.6.18:
 uglify-js@^3.1.4:
   version "3.17.4"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.17.4.tgz#61678cf5fa3f5b7eb789bb345df29afb8257c22c"
+
+uid-safe@~2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/uid-safe/-/uid-safe-2.1.5.tgz#2b3d5c7240e8fc2e58f8aa269e5ee49c0857bd3a"
+  dependencies:
+    random-bytes "~1.0.0"
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
