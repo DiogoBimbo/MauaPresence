@@ -25,6 +25,11 @@ const alunoSchema = new Schema({
     senha: {
         type: String,
         required: true
+    },
+    id_curso: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Curso',
+        required: true
     }
 });
 
