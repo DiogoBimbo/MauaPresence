@@ -3,61 +3,74 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 
-const Admin = require('../models/administrador');
-const Curso = require('../models/curso');
-const Materia = require('../models/materia');
-const CursoMateria = require('../models/cursoMateria');
-const Aluno = require('../models/aluno');
-const Professor = require('../models/Professor');
-const Aula = require('../models/Aula');
+const Admin = require("../models/administrador");
+const Curso = require("../models/curso");
+const Materia = require("../models/materia");
+const CursoMateria = require("../models/cursoMateria");
+const Aluno = require("../models/aluno");
+const Professor = require("../models/professor");
+const Aula = require("../models/Aula");
 
-router.get('/', async (req,res) => {
-    res.send("Página principal do painel ADM")
+router.get("/", async (req, res) => {
+  res.send("Página principal do painel ADM");
 });
 
 // rota login usando jwt e bcrypt
-router.post('/login', async (req, res) => {
-    try {
-      const { email, password } = req.body;
-      const admin = await Admin.findOne({ email });
-      if (!admin) {
-        return res.status(401).json({ error: "Email ou senha inválidos" });
-      }
-      const passwordCheck = await bcrypt.compare(password, admin.password);
-      if (!passwordCheck) {
-        return res.status(401).json({ error: "Email ou senha inválidos" });
-      }
-      const token = jwt.sign({ id: admin._id }, "chave secreta", {
-        expiresIn: "1h",
-      });
-      res.json({ token });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+router.post("/login", async (req, res) => {
+  try {
+    const { email, senha } = req.body;
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(401).json({ error: "Email ou senha inválidos" });
     }
-  });
-
-router.get('/cursos', async (req,res) => {
-    res.send("Página de cursos")
+    const checaSenha = await bcrypt.compare(senha, admin.senha);
+    if (!checaSenha) {
+      return res.status(401).json({ error: "Email ou senha inválidos" });
+    }
+    const token = jwt.sign({ id: admin._id }, "chave secreta", {
+      expiresIn: "1h",
+    });
+    res.json({ token });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-router.get('/materias', async (req,res) => {
-    res.send("Página de materias")
+router.get("/cursos", async (req, res) => {
+  res.send("Página de cursos");
 });
 
-router.get('/cursoMaterias', async (req,res) => {
-    res.send("Página de materias associadas à um curso")
+router.get("/materias", async (req, res) => {
+  res.send("Página de materias");
 });
 
-router.get('/alunos', async (req,res) => {
-    res.send("Página de alunos")
+router.get("/cursoMaterias", async (req, res) => {
+  res.send("Página de materias associadas à um curso");
 });
 
-router.get('/professores', async (req,res) => {
-    res.send("Página de professores")
+router.get("/alunos", async (req, res) => {
+  res.send("Página de alunos");
 });
 
-router.get('/aulas', async (req,res) => {
-    res.send("Página de cursos")
+router.get("/professores", async (req, res) => {
+  res.send("Página de professores");
 });
+
+router.get("/aulas", async (req, res) => {
+  res.send("Página de cursos");
+});
+
+router.post("/cadastro", async (req, res) => {
+  try {
+    const { email, senha } = req.body;
+    const senhaSegura = await bcrypt.hash(senha, 10);
+    const admin = new Admin({ email, senha: senhaSegura });
+    await admin.save();
+    res.status(201).json(admin);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 module.exports = router;
