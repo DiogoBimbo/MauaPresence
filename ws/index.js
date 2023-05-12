@@ -1,25 +1,40 @@
-const express = require("express");
-const morgan = require("morgan");
-const cors = require("cors");
-const exphbs = require("express-handlebars");
+const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
+const session = require('express-session');
+const flash = require('connect-flash');
+const exphbs = require('express-handlebars');
 const app = express();
-const bodyParser = require("body-parser");
-const admin = require("./src/routes/admin.routes");
+const bodyParser = require('body-parser');
+const admin = require('./src/routes/admin.routes');
 const aluno = require("./src/routes/aluno.routes");
 const professor = require("./src/routes/professor.routes");
-require("./database");
+require('./database');
 
 //Configs
-// Template Engine
-app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
-app.set("view engine", "handlebars");
+  // Template Engine
+  app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
+  app.set('view engine', 'handlebars');
 
-// Middlewares
-app.use(morgan("dev"));
-app.use(express.json());
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+   // Sessão
+   app.use(session({
+    secret: "curiosidade",
+    resave: true,
+    saveUninitialized: true
+  }));
+  app.use(flash());
+
+  // Middlewares
+  app.use((req, res, next) =>{
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    next();
+  });
+  app.use(morgan('dev'));
+  app.use(express.json());  
+  app.use(cors());
+  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(bodyParser.json())
 
 // Variables
 app.set("port", 8000);

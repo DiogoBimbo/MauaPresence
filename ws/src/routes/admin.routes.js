@@ -1,6 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const Joi = require('joi');
 const router = express.Router();
 
 const Admin = require("../models/administrador");
@@ -11,8 +12,8 @@ const Aluno = require("../models/aluno");
 const Professor = require("../models/professor");
 const Aula = require("../models/Aula");
 
-router.get("/", async (req, res) => {
-  res.send("Página principal do painel ADM");
+router.get('/', async (req,res) => {
+  res.render('admin/index');
 });
 
 // rota login usando jwt e bcrypt
@@ -36,16 +37,71 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/cursos", async (req, res) => {
-  res.send("Página de cursos");
+// rotas dos Cursos
+router.get('/cursos', async (req,res) => {
+  res.render('admin/cursos');
 });
 
-router.get("/materias", async (req, res) => {
-  res.send("Página de materias");
+ // rota do formulário para cadastro
+ router.get('/cursos/cadastrar', async (req,res) => {
+  res.render('admin/cadastrar_cursos');
 });
 
-router.get("/cursoMaterias", async (req, res) => {
-  res.send("Página de materias associadas à um curso");
+//rota que valida e cadastra o novo Curso
+router.post('/cursos/novo', async (req,res) => {
+  const novoCurso = {
+    cod_curso: req.body.cod_curso,
+    nome_curso: req.body.nome
+  }
+
+  // Validação dos campos usando Joi
+  const schema = Joi.object({
+    cod_curso: Joi.string().required().messages({
+      'any.required': 'O campo código do curso é obrigatório',
+      'string.empty': 'Por favor, informe um valor para o código do curso'
+    }),
+    nome_curso: Joi.string().required().messages({
+      'any.required': 'O campo nome do curso é obrigatório',
+      'string.empty': 'Por favor, informe um valor para o nome do curso'
+    })
+  });
+  const { error } = schema.validate(novoCurso);
+  if (error) {
+    req.flash('error_msg', 'Erro ao cadastrar curso: ' + error.details[0].message);
+    res.redirect('/admin/cursos/cadastrar');
+    return;
+  }
+
+// Verifica se já existe algum curso cadastrado com o mesmo nome ou código
+const cursoExistente = await Curso.findOne({
+  $or: [
+    { cod_curso: novoCurso.cod_curso },
+    { nome_curso: novoCurso.nome_curso }
+  ]
+});
+
+if (cursoExistente) {
+  if (cursoExistente.cod_curso === novoCurso.cod_curso) {
+    req.flash('error_msg', 'Já existe um curso cadastrado com este código');
+  } else {
+    req.flash('error_msg', 'Já existe um curso cadastrado com este nome');
+  }
+  res.redirect('/admin/cursos/cadastrar');
+  return;
+}
+
+  // Cadastra o novo curso
+  new Curso(novoCurso).save().then(() => {
+    req.flash('success_msg', 'Curso cadastrado com sucesso');
+    res.redirect('/admin/cursos');
+  }).catch((err) => {
+    req.flash('error_msg', 'Erro ao cadastrar curso');
+    res.redirect('/admin/cursos/cadastrar');
+  });
+});
+// rotas das Matérias
+router.get('/materias', async (req,res) => {
+    res.send("Página de materias")
 });
 
 router.get("/alunos", async (req, res) => {

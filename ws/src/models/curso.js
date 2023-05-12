@@ -3,12 +3,10 @@ const Schema = mongoose.Schema;
 
 const cursoSchema = new mongoose.Schema({
     cod_curso: {
-      type: String,
-      required: true
+      type: String
     },
     nome_curso: {
-        type: String,
-        required: true
+      type: String
     }
 });
 
