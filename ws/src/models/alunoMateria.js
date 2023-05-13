@@ -1,4 +1,3 @@
-// talvez seja inútil
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 

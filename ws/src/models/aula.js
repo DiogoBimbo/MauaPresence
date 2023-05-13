@@ -15,6 +15,11 @@ const aulaSchema = new mongoose.Schema({
         ref: 'Materia',
         required: true
     },
+    tipo_aula: {
+        type: String,
+        enum: ['TEO', 'LAB'],
+         default: 'TEO'
+    },
     id_professor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Professor',
