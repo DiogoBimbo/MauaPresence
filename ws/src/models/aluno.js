@@ -15,7 +15,7 @@ const alunoSchema = new Schema({
         required: true
     },
     gtl: {
-        type: String,
+        type: Number,
         required: true
     },
     email: {
