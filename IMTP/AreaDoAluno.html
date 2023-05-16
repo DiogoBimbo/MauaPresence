@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMT Presence - Aluno</title>
+
+    <!--Links-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    
+    <link href="/styleAluno.css">
+
+</head>
+<body>
+
+    <!--NAVBAR-->
+    <nav class="navbar navbar-expand-lg" style="background-image: linear-gradient(to right, #bb8bff, #6ffff8)">
+        <div class="container-fluid">
+
+            <!--LogoImage-->
+            <a class="navbar-brand" href="#"> <img src="/imagens/Logo_Cheio_Branco.png" alt="LogoBranco" width="40px"> </a>
+
+            <img src="imagens/MenuNav.png" alt="MenuDeNav" width="50px" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+
+            <!--Botoes-->
+            <div class="container"></div>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+
+                        <!--Botão HomePage-->
+                        <li class="nav-item">
+                            <a class="btn" href="#">Home</a>
+                        </li>
+
+                        <!--Botão de Suporte-->
+                        <li class="nav-item">
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#but_support" data-bs-whatever="@getbootstrap">Suporte</button>
+                        </li>
+
+                        <!--ModalSuporte-->
+                        <div class="modal fade" id="but_support" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <!--Título do Modal-->
+                                    <div class="modal-header" style="background-image: linear-gradient(to left, #bb8bff, white)">
+                                        <h1 class="modal-title fs-5" id="ModalLabel">Atendimento e Suporte</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+
+                                    <!--Corpo do Modal-->
+                                    <div class="modal-body">
+                                        <form>
+
+                                            <!--Para quem enviar-->
+                                            <div class="mb-3">
+                                                <label for="recipient-name" class="col-form-label">Para:</label>
+                                                <select class="form-select" id="inputGroupSelect01">
+                                                    <option selected></option>
+                                                    <option value="1">Email 1</option>
+                                                    <option value="2">Email 2</option>
+                                                    <option value="3">Email 3</option>
+                                                </select>
+                                            </div>
+
+                                            <!--Quem está enviando-->
+                                            <div class="mb-3">
+                                                <label for="recipient-name" class="col-form-label">
+                                                    Digite seu email:
+                                                </label>
+                                                <input type="text" class="form-control" id="recipient-name">
+                                            </div>
+
+                                            <!--Mensagem-->
+                                            <div class="mb-3">
+                                                <label for="message-text" class="col-form-label">Mensagem:</label>
+                                                <textarea class="form-control" id="message-text"></textarea>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!--Rodapé do Modal-->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn" style="background-image: linear-gradient(to right, #bb8bff, #6ffff8); color: white; border-radius: 50px;">
+                                            Enviar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!--CORPO-->
+    <div class="card">
+
+        <!--Opções do Menu-->
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="true" href="#">PRESENÇA</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">CONFIGURAÇÕES</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link disabled">HISTÓRICO</a>
+                </li>
+
+            </ul>
+        </div>
+
+        <!--Corpo da Opção PRESENÇA-->
+        <div class="card-body" style="margin-top: 50px;">
+            <h2 class="card-title">AULAS - 00/00 - SEGUNDA</h2>
+
+            <!--Aulas-->
+            <div class="row row-cols-1 row-cols-md-3 g-4" style="margin-top: 20px;">
+
+                <!--CARD 1-->
+                <div class="col">
+                  <div class="card">
+                    <div class="card-header" style="background-image: linear-gradient(to right, #bb8bff, #6ffff8);"></div>
+                    <div class="card-body">
+                      <h5 class="card-title">TTI201 - ALGORITMO,ESTRUTURAS DE DADOS E PROGRAMAÇÃO</h5>
+                      <h6 class="card-title">Prof. Name and Surname</h6>
+                      <p class="card-text">07H40 - 9H20</p>
+                      <p class="card-text">Status: Concluída</p>
+                    </div>
+                    <div class="card-footer text-center" style="background-color: lightgreen;">
+                        <p style="margin: 7px; color: green;">Presença Confirmada!</p>
+                    </div>
+                  </div>
+                </div>
+                <!---->
+
+                <!--CARD 2-->
+                <div class="col">
+                    <div class="card">
+                        
+                        <div class="card-header" style="background-image:linear-gradient(to right, #6ffff8, #bb8bff)">
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">TTI201 - ALGORITMO,ESTRUTURAS DE DADOS E PROGRAMAÇÃO</h5>
+                            <h6 class="card-title">Prof. Name and Surname</h6>
+                            <p class="card-text">09H30 - 11H10</p>
+                            <p class="card-text">Status: Em processo</p>
+                        </div>
+
+                        <div class="card-footer">
+
+                            <!--BotãoQR-->
+                            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#but_qr" data-bs-whatever="@getbootstrap">QR CODE</button>
+
+                            <!--ModalQR-->
+                            <div class="modal fade" id="but_qr" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+    
+                                        <!--Título do Modal-->
+                                        <div class="modal-header" style="background-image: linear-gradient(to left, #bb8bff, white)">
+                                            <h1 class="modal-title fs-5" id="ModalLabel">Leitor QR</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+    
+                                        <!--Corpo do Modal-->
+                                        <div class="modal-body text-center">
+                                            <form>
+                                                
+                                                <!--CamScreen-->
+                                                <script href="/CamTest.js"></script>
+
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--BotãoChave-->
+                            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#but_key" data-bs-whatever="@getbootstrap">CHAVE</button>
+                            
+                            <!--ModalChave-->
+                            <div class="modal fade" id="but_key" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+    
+                                        <!--Título do Modal-->
+                                        <div class="modal-header" style="background-image: linear-gradient(to left, #bb8bff, white)">
+                                            <h1 class="modal-title fs-5" id="ModalLabel">Chave Aleatória</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+    
+                                        <!--Corpo do Modal-->
+                                        <div class="modal-body text-center">
+                                            <form>
+    
+                                                <!--Código-->
+                                                <div class="mb-3">
+                                                    <label for="recipient-name" class="col-form-label"><strong>INSIRA O CÓDIGO</strong></label>
+
+                                                    <div class="input-group input-group-lg">
+                                                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+
+                                                        <button class="btn btn-outline-secondary" type="button" id="button-addon1">Enviar</button>
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--CARD 3-->
+                <div class="col">
+                    <div class="card">
+                      <div class="card-header"></div>
+                      <div class="card-body">
+                        <div style="color: gray;">
+                            <h5 class="card-title">TTI201 - ALGORITMO,ESTRUTURAS DE DADOS E PROGRAMAÇÃO</h5>
+                            <h6 class="card-title">Prof. Name and Surname</h6>
+                            <p class="card-text">11H30 - 13H00</p>
+                            <p class="card-text">Status: Fechada</p>
+                        </div>
+                      </div>
+                      <div class="card-footer">
+                          <button type="button" class="btn btn-light disabled">QR CODE</button>
+                          <button type="button" class="btn btn-light disabled">CHAVE</button>
+                      </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+
+</body>
+</html>
