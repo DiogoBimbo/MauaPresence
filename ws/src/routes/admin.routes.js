@@ -191,8 +191,17 @@ router.get("/alunos", async (req, res) => {
 
 // rota do formulário para cadastro
 router.get("/alunos/cadastrar", async (req, res) => {
-  res.render("admin/cadastrar_alunos");
+  Curso.find().lean()
+    .then((curso) => {
+      console.log(curso); // imprime todos os cursos no console
+      res.render("admin/cadastrar_alunos", { curso: curso });
+    })
+    .catch((err) => {
+      req.flash("error_msg", "Houve um erro ao carregar os cursos");
+      res.redirect("/admin");
+    });
 });
+
 
 //rota que valida e cadastra o novo aluno
 router.post("/alunos/novo", async (req, res) => {
@@ -239,9 +248,9 @@ router.post("/alunos/novo", async (req, res) => {
       "any.required": "O campo senha do aluno é obrigatório",
       "string.empty": "Por favor, informe um valor para a senha do aluno",
     }),
-    id_curso: Joi.number().required().messages({
+    id_curso: Joi.string().required().messages({
       "any.required": "O campo id do curso do aluno é obrigatório",
-      "number.base": "Por favor, informe um valor numérico",
+      "string.empty": "aaaaaaaaaaaaaaaaaaaaa",
     }),
   });
 
