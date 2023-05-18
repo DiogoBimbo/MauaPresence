@@ -191,7 +191,8 @@ router.get("/alunos", async (req, res) => {
 
 // rota do formulário para cadastro
 router.get("/alunos/cadastrar", async (req, res) => {
-  Curso.find().lean()
+  Curso.find()
+    .lean()
     .then((curso) => {
       console.log(curso); // imprime todos os cursos no console
       res.render("admin/cadastrar_alunos", { curso: curso });
@@ -201,7 +202,6 @@ router.get("/alunos/cadastrar", async (req, res) => {
       res.redirect("/admin");
     });
 });
-
 
 //rota que valida e cadastra o novo aluno
 router.post("/alunos/novo", async (req, res) => {
@@ -386,5 +386,55 @@ router.get("/aulas", async (req, res) => {
 //     res.status(500).json({ error: err.message });
 //   }
 // });
+
+// const wifiName = require("wifi-name");
+
+// function obterNomeRedeWifi() {
+//   return new Promise((resolve, reject) => {
+//     wifiName().then(nomeRede => {
+//       resolve(nomeRede);
+//     }).catch(err => {
+//       reject(err);
+//     });
+//   });
+// }
+
+// router.get('/wifi', async (req, res) => {
+//   try {
+//     const nomeRede = await obterNomeRedeWifi();
+//     if(nomeRede == 'IDGS 5G') {
+
+//       res.send('Nome da rede Wi-Fi: ' + nomeRede);
+//     }
+//     else {
+//       res.send('A rede conectada não é a IDGS 5G');
+//     }
+//   } catch (err) {
+//     console.error('Erro ao obter o nome da rede Wi-Fi:', err);
+//     res.status(500).send('Erro ao obter o nome da rede Wi-Fi');
+//   }
+// });
+
+const axios = require('axios');
+
+
+router.get('/localizacao', async (req, res) => {
+  try {
+    const response = await axios.get('http://ip-api.com/json');
+    const { city, regionName, country, lat, lon } = response.data;
+
+    const location = `Localização: ${city}, ${regionName}, ${country}`;
+    const coordinates = `Coordenadas: ${lat}, ${lon}`;
+
+    res.send(`${location}\n${coordinates}`);
+  } catch (error) {
+    console.error('Ocorreu um erro ao obter a localização:', error.message);
+    res.status(500).send('Erro ao obter a localização');
+  }
+});
+
+
+
+
 
 module.exports = router;
