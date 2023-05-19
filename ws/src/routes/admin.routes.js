@@ -415,23 +415,23 @@ router.get("/aulas", async (req, res) => {
 //   }
 // });
 
-const axios = require('axios');
+// const axios = require('axios');
 
 
-router.get('/localizacao', async (req, res) => {
-  try {
-    const response = await axios.get('http://ip-api.com/json');
-    const { city, regionName, country, lat, lon } = response.data;
+// router.get('/localizacao', async (req, res) => {
+//   try {
+//     const response = await axios.get('http://ip-api.com/json');
+//     const { city, regionName, country, lat, lon } = response.data;
 
-    const location = `Localização: ${city}, ${regionName}, ${country}`;
-    const coordinates = `Coordenadas: ${lat}, ${lon}`;
+//     const location = `Localização: ${city}, ${regionName}, ${country}`;
+//     const coordinates = `Coordenadas: ${lat}, ${lon}`;
 
-    res.send(`${location}\n${coordinates}`);
-  } catch (error) {
-    console.error('Ocorreu um erro ao obter a localização:', error.message);
-    res.status(500).send('Erro ao obter a localização');
-  }
-});
+//     res.send(`${location}\n${coordinates}`);
+//   } catch (error) {
+//     console.error('Ocorreu um erro ao obter a localização:', error.message);
+//     res.status(500).send('Erro ao obter a localização');
+//   }
+// });
 
 
 
