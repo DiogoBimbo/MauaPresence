@@ -10,15 +10,14 @@ const aulaSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    tipo_aula: {
+        type: String,
+        enum: ['TEO', 'LAB']
+    },
     id_materia: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Materia',
         required: true
-    },
-    tipo_aula: {
-        type: String,
-        enum: ['TEO', 'LAB'],
-         default: 'TEO'
     },
     id_professor: {
         type: mongoose.Schema.Types.ObjectId,
@@ -26,10 +25,9 @@ const aulaSchema = new mongoose.Schema({
         required: true
     },
     dia_semana: {
-        type: Number,
+        type: String,
         required: true,
-        min: 1,
-        max: 7
+        enum: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado']
     },
     sala: {
         type: String,

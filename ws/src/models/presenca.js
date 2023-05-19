@@ -26,6 +26,11 @@ const presencaSchema = new mongoose.Schema({
             default: 'faltou'
         }
     ],
+    status_aula: {
+        type: String,
+        enum: ['aberta','desabilitada', 'finalizada'],
+        default: 'desabilitada'
+    }
 });
 
 module.exports = mongoose.model('Presenca', presencaSchema);
