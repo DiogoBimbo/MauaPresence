@@ -7,11 +7,11 @@ const cursoMateriaSchema = new mongoose.Schema({
         ref: 'Curso',
         required: true
     },
-    id_materia: {
+    id_materia: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Materia',
         required: true
-    }
+    }]
 });
 
 module.exports = mongoose.model('CursoMateria', cursoMateriaSchema);

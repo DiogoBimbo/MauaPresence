@@ -14,8 +14,16 @@ const alunoSchema = new Schema({
         type: Number,
         required: true
     },
-    gtl: {
-        type: Number,
+    grupo: {
+        type: String,
+        required: true
+    },
+    turma: {
+        type: String,
+        required: true
+    },
+    lab: {
+        type: String,
         required: true
     },
     email: {

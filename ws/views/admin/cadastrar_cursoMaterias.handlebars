@@ -1,0 +1,53 @@
+<h3>Curso e suas respectivas matérias:</h3>
+<div class="card">
+    <div class="card-body">
+        <form action="/admin/cursoMaterias/novo" method="POST">
+            <label for="id_curso">Curso:</label>
+            <div id="selectContainer">
+                <select name="id_curso" class="form-select">
+                    {{#each curso}}
+                    <option value="{{_id}}">{{nome_curso}}</option>
+                    {{else}}
+                    <option value="0">Não há nenhum curso registrado</option>
+                    {{/each}}
+                </select>
+                <label for="id_curso">Matérias:</label>
+                <select name="id_materia" class="form-select">
+                    {{#each materia}}
+                    <option value="{{_id}}">{{nome_materia}}</option>
+                    {{else}}
+                    <option value="0">Não há nenhuma matéria registrada</option>
+                    {{/each}}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success mt-3">Cadastrar matérias no curso</button>
+            <button class="btn btn-primary mt-3" type="button" onclick="adicionarCampo()">Adicionar matéria</button>
+            <button class="btn btn-danger mt-3" type="button" onclick="removerCampo()" id="btn_remover">Remover matéria</button>
+        </form>
+    </div>
+</div>
+<script>
+function adicionarCampo() {
+    var selectContainer = document.getElementById('selectContainer');
+    var novoSelect = document.createElement('select');
+    novoSelect.name = 'id_materia';
+    novoSelect.className = 'form-select mt-2';
+
+    {{#each materia}}
+    var option = document.createElement('option');
+    option.value = '{{_id}}';
+    option.text = '{{nome_materia}}';
+    novoSelect.appendChild(option);
+    {{/each}}
+
+    selectContainer.appendChild(novoSelect);
+}
+
+function removerCampo() {
+    var selectContainer = document.getElementById('selectContainer');
+    var selects = selectContainer.getElementsByTagName('select');
+    if (selects.length > 2) {
+        selectContainer.removeChild(selects[selects.length - 1]);
+    }
+}
+</script>
