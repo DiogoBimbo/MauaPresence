@@ -41,9 +41,14 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// rotas dos Cursos
+// rota que faz a listagem dos Cursos
 router.get("/cursos", async (req, res) => {
-  res.render("admin/cursos");
+  Curso.find().lean().then((cursos) => {
+    res.render("admin/cursos", {cursos:cursos});
+  }).catch((err) => {
+    req.flash("error_msg","Houve um errro ao listar os cursos");
+    res.redirect("/admin");
+  });
 });
 
 // rota do formulário para cadastro
@@ -109,9 +114,19 @@ router.post("/cursos/novo", async (req, res) => {
     });
 });
 
-// rotas das Matérias
+//rota de edição do Curso
+router.get("/cursos/editar/:id", async (req, res) =>{
+  res.render("admin/editar_cursos")
+});
+
+// rota que faz a listagem das Matérias
 router.get("/materias", async (req, res) => {
-  res.render("admin/materias");
+  Materia.find().lean().then((materias) => {
+    res.render("admin/materias", {materias:materias});
+  }).catch((err) => {
+    req.flash("error_msg","Houve um errro ao listar as matérias");
+    res.redirect("/admin");
+  });
 });
 
 // rota do formulário para cadastro
@@ -180,9 +195,14 @@ router.post("/materias/novo", async (req, res) => {
     });
 });
 
-// rotas dos cursos-matérias
+// rota que faz a listagem do cursoMatérias
 router.get("/cursoMaterias", async (req, res) => {
-  res.render("admin/cursoMaterias");
+  CursoMateria.find().populate("id_curso").populate("id_materia").lean().then((cursoMaterias) => {
+    res.render("admin/cursoMaterias", {cursoMaterias:cursoMaterias});
+  }).catch((err) => {
+    req.flash("error_msg","Houve um errro ao listar as matérias em seus respectivos cursos");
+    res.redirect("/admin");
+  });
 });
 
 // rota do formulário para cadastro
@@ -261,9 +281,14 @@ router.post("/cursoMaterias/novo", async (req, res) => {
     });
 });
 
-// rotas dos Alunos
+// rota que faz a listagem dos Alunos
 router.get("/alunos", async (req, res) => {
-  res.render("admin/alunos");
+  Aluno.find().populate("id_curso").lean().then((alunos) => {
+    res.render("admin/alunos", {alunos:alunos});
+  }).catch((err) => {
+    req.flash("error_msg","Houve um errro ao listar os alunos");
+    res.redirect("/admin");
+  });
 });
 
 // rota do formulário para cadastro
@@ -279,7 +304,7 @@ router.get("/alunos/cadastrar", async (req, res) => {
     });
 });
 
-//rota que valida e cadastra o novo aluno
+// rota que valida e cadastra o novo aluno
 router.post("/alunos/novo", async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(req.body.senha, salt);
@@ -371,9 +396,14 @@ router.post("/alunos/novo", async (req, res) => {
     });
 });
 
-// rotas dos alunos-matérias
+// rota que faz a listagem dos alunoMatérias
 router.get("/alunoMaterias", async (req, res) => {
-  res.render("admin/alunoMaterias");
+  AlunoMateria.find().populate("id_aluno").populate("id_materia").lean().then((alunoMaterias) => {
+    res.render("admin/alunoMaterias", {alunoMaterias:alunoMaterias});
+  }).catch((err) => {
+    req.flash("error_msg","Houve um errro ao listar as matérias em seus respectivos alunos");
+    res.redirect("/admin");
+  });
 });
 
 // rota do formulário para cadastro
@@ -452,9 +482,14 @@ router.post("/alunoMaterias/novo", async (req, res) => {
     });
 });
 
-// rotas dos Professores
+// rotas que faz a listagem dos Professores
 router.get("/professores", async (req, res) => {
-  res.render("admin/professores");
+  Professor.find().lean().then((professores) => {
+    res.render("admin/professores", {professores:professores});
+  }).catch((err) => {
+    req.flash("error_msg","Houve um errro ao listar os professores");
+    res.redirect("/admin");
+  });
 });
 
 // rota do formulário para cadastro
@@ -529,9 +564,14 @@ router.post("/professores/novo", async (req, res) => {
     });
 });
 
-// rotas das Aulas
+// rota que faz a listagem das Aulas
 router.get("/aulas", async (req, res) => {
-  res.render("admin/aulas");
+  Aula.find().populate("id_professor").populate("id_materia").lean().then((aulas) => {
+    res.render("admin/aulas", {aulas:aulas});
+  }).catch((err) => {
+    req.flash("error_msg","Houve um errro ao listar as aulas");
+    res.redirect("/admin");
+  });
 });
 
 // rota do formulário para cadastro
@@ -553,7 +593,7 @@ router.get("/aulas/cadastrar", async (req, res) => {
   }
 });
 
-// rota que valida e cadastra a nova Aula
+// rota que valida e cadastra a nova Aula - obs: precisa dar uma revisada por causa das PAE
 router.post("/aulas/novo", async (req, res) => {
   const novaAula = {
     horario_inicio: req.body.horario_inicio,
@@ -570,13 +610,15 @@ router.post("/aulas/novo", async (req, res) => {
 
   // Validação dos campos usando Joi
   const schema = Joi.object({
-    horario_inicio: Joi.string().required().messages({
+    horario_inicio: Joi.string().length(5).required().messages({
       "any.required": "O campo horário de início é obrigatório",
       "string.empty": "Por favor, informe o horário de início",
+      "string.length": "O campo horário de início deve possuir 5 caracteres, incluindo o dois pontos"
     }),
-    horario_fim: Joi.string().required().messages({
+    horario_fim: Joi.string().length(5).required().messages({
       "any.required": "O campo horário de fim é obrigatório",
       "string.empty": "Por favor, informe o horário de fim",
+      "string.length": "O campo horário de fim deve possuir 5 caracteres, incluindo o dois pontos" 
     }),
     tipo_aula: Joi.string().valid("TEO", "LAB").required().messages({
       "any.required": "O campo tipo de aula é obrigatório",
@@ -623,7 +665,7 @@ router.post("/aulas/novo", async (req, res) => {
     return;
   }
 
-  // verificação para não permitir cadastrar aulas de um curso, no mesmo horário em um mesmo dia da semana, no mesmo gtl ???
+  // verificação para não permitir cadastrar aulas iguais
 
   new Aula(novaAula)
     .save()

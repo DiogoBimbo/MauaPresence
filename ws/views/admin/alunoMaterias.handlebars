@@ -4,3 +4,22 @@
     type="button"
     class="btn btn-success"
   >Adicionar matérias á um aluno</button></a>
+
+  {{#each alunoMaterias}}
+    <div class="card my-3">
+        <div class="card-body">
+            <h5>{{id_aluno.nome_completo}} / RA: {{id_aluno.ra}}</h5>
+            <hr />
+            <h5>Matérias: </h5>
+            {{#each id_materia}}
+              <p>{{cod_materia}}: {{nome_materia}}</p>
+            {{/each}}
+        </div>
+    </div>
+{{else}}
+ <div class="card my-3">
+        <div class="card-body">         
+          <p class="card-title text-center">Nenhuma aluno-matéria registrado</p>
+        </div>
+    </div>
+{{/each}}

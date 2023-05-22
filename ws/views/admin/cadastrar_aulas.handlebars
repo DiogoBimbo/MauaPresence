@@ -7,7 +7,7 @@
         type="text"
         id="horario_inicio"
         name="horario_inicio"
-        placeholder="Horário de início da aula"
+        placeholder="00:00"
         class="form-control"
       />
 
@@ -16,10 +16,11 @@
         type="text"
         id="horario_fim"
         name="horario_fim"
-        placeholder="Horário de término da aula"
+        placeholder="00:00"
         class="form-control"
       />
 
+      <label for="tipo_aula">Tipo da aula:</label>
       <select name="tipo_aula" id="tipo_aula" class="form-select">
         <option value="TEO">Teórica</option>
         <option value="LAB">Laboratório</option>
@@ -43,6 +44,7 @@
         {{/each}}
       </select>
 
+      <label for="dia_semana">Dia da semana:</label>
       <select name="dia_semana", id="dia_semana", class="form-select">
         <option value="Domingo">Domingo</option>
         <option value="Segunda-feira">Segunda-feira</option>

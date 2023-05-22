@@ -4,3 +4,19 @@
     type="button"
     class="btn btn-success"
   >Adicionar professor</button></a>
+
+{{#each professores}}
+    <div class="card my-3">
+        <div class="card-body">
+            <h5>{{nome_completo}} / RA: {{ra}}</h5>
+            <hr />
+            <p>Email: {{email}}</p>
+        </div>
+    </div>
+{{else}}
+    <div class="card my-3">
+        <div class="card-body">       
+            <p class="card-title text-center">Nenhum Professor registrado</p>
+        </div>
+    </div>
+{{/each}}
