@@ -2,10 +2,6 @@ body {
     font-family: 'Century Gothic', sans-serif;
 }
 
-.center {
-    text-align: center;
-}
-
 .logo_grande {
     margin-left: auto;
     margin-right: auto;
@@ -23,31 +19,28 @@ body {
     margin-left: 20%;
     margin-right: 20%;
     font-size: 36px;
-    font-weight: 300;
-    color: #000000;
+
 }
 
-.explic {
-    display: flex;
-    justify-content: space-around;
-    flex-direction: row;
-    align-items: center;
-}
-
-.text {
-    font-size: 24px;
-}
-
-.setas {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.sobre {
-    width: 200px;
-    height: 120px;
-    margin: 10px;
+@media (max-width: 500px) {
+    .logo_grande {
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        justify-content: center;
+        padding-top: 5%;
+        width: 50%;
+        height: 50%;
+    }
+    .introducao {
+        text-align: center;
+        padding-top: 5%;
+        padding-bottom: 5%;
+        margin-left: 5%;
+        margin-right: 5%;
+        font-size: 32px;
+    }
+    
 }
 
 .fundo_tutorial {
@@ -56,25 +49,68 @@ body {
     display: flex;
     justify-content: center;
     padding-top: 1%;
-    width: 50%;
-    height: 50%;
+    width: 75%;
+    height: 100%;
 
 }
-.final_pagina {
+
+@media (max-width: 500px) {
+    .fundo_tutorial {
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        justify-content: center;
+        padding-top: 5%;
+        padding-bottom: 5%;
+        width: 100%;
+        height: 100%;
+    }
+    
+}
+
+.logo_preto {
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    padding-top: 5%;
+    width: 20%;
+    height: 20%;
 }
 
-.logo_final {
-    width: 16%;
-    height: 10%;
-    margin: 100px;
+.texto_final {
+    text-align: center;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    margin-left: 20%;
+    margin-right: 20%;
+    font-size: 36px;
+
 }
 
-.lateral {
-    width: 4%;
-    height: 6%;
-    margin: 100px;
+@media (max-width: 500px) {
+    .logo_preto {
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        justify-content: center;
+        padding-top: 20%;
+        width: 50%;
+        height: 50%;
+    }
+    .texto_final {
+        text-align: center;
+        padding-top: 5%;
+        padding-bottom: 5%;
+        margin-left: 5%;
+        margin-right: 5%;
+        font-size: 32px;
+
+    }
 }
 
-
+footer {
+    padding: 10px;
+    font-size: 16px;
+    background-image: linear-gradient(to right, #bb8bff, #6ffff8);
+}

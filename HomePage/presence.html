@@ -12,7 +12,7 @@
   <body>
 
   <!---------- NAVBAR --------->
-  <nav class="navbar navbar-expand-lg" style="background-image: linear-gradient(to right, #bb8bff, #6ffff8)">
+  <nav class="navbar navbar-expand-lg " style="background-image: linear-gradient(to right, #bb8bff, #6ffff8)">
     <div class="container-fluid">
 
         <!--Logo da Navbar-->
@@ -136,41 +136,37 @@
         </div>
     </div>
 </nav>
+    <!---------- NAVBAR --------->
+
 
     <!-- Primeiro logo e texto-->
     <div class="homepage" >
       <img class="logo_grande" src="images/Logo_Colorido.png" alt="Logo" class="d-inline-block align-text-top">
       <h1 class="introducao">O Sistema de Presença Digital do Instituto Mauá de Tecnologia</h1>
     </div>
+    <!-- Primeiro logo e texto-->
 
-    <!-- Segundo texto com setas e explicação-->
-    <div class="explic">
-      <div class="text"> Como funciona</div>
-      <div class="text"> Sobre o IMT Presence</div>
+
+    <!-- Imagem do Meio da Página com Informações-->
+    <div class="fundo_tutorial">
+      <picture>
+        <source media="(max-width: 500px)" srcset="images/Tutorial_Fundo_Mobile.png">
+        <img class="fundo_tutorial" src="images/Tutorial_Fundo.png" alt="fundo_tutorial" >
+      </picture>
     </div>
+    <!-- Imagem do Meio da Página com Informações-->
 
-    <div class="setas">
-      <img class ="sobre" src="images/seta.png" alt="seta" ></a>
-      <img class = "sobre" src="images/seta.png" alt="seta" ></a>
-    </div>
-
-
-    <!-- Imagem do Meio da Página -->
-    <div class="tutorial">
-      <img class="fundo_tutorial" src="images/Tutorial_Fundo.png" alt="fundo_tutorial" >
-    </div>
-
-
-    <!-- Final da página com logo, texto e laterais-->
+    <!-- Texto Final -->
     <div class="final_pagina">
-      <img class="lateral" src="images/LateralDir.png"></img>
+        <img class="logo_preto" media="(max-width: 500px)" src="images/Logo_Preto.png" alt="Logo" class="d-inline-block align-text-top">
+        <h1 class="texto_final">O <strong> IMT Presence</strong> é uma plataforma de <strong> presença digital</strong> feito para automatizar o sistema de marcação de presença do <strong> Instituto Mauá de Tecnologia</strong></h1>
+    </div>
+    <!-- Texto Final -->
 
-      <img class="logo_final" src="images/Logo_Colorido.png"></img>
-      <!-- Inserir esse texto abaixo do logo, centralizado
-        O IMT Presence é uma plataforma de presença digital feito par automatizar o sistema de marcação de presença do Instituto Mauá de Tecnologia.-->
-    
-      <img class="lateral" src="images/LateralDir.png"></img>
-
+    <!-- Footer -->
+    <footer>
+        <p> &copy; Mauá Presence 2023</p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
     <script src="./script.js"></script>
