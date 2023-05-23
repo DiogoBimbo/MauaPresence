@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMT Presence - Aluno</title>
+
+    <!--Links-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="styleAluno.css"/>
+
+    <style>
+        footer {
+            margin-top: 126px;
+            text-align: center;
+            padding: 3px;
+            background-image: linear-gradient(to right, #bb8bff, #6ffff8);
+            color: white;
+        }
+    </style>
+
+</head>
+
+<body style="font-family: 'Century Gothic', sans-serif;">
+
+    <!--NAVBAR-->
+    <nav class="navbar navbar-expand-lg" style="background-image: linear-gradient(to right, #bb8bff, #6ffff8)">
+        <div class="container-fluid">
+
+            <!--LogoImage-->
+            <a class="navbar-brand" href="#"> <img src="/imagens/Logo_Cheio_Branco.png" alt="LogoBranco" width="40px">
+            </a>
+
+            <img src="imagens/MenuNav.png" alt="MenuDeNav" width="50px" class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+
+            <!--Botoes-->
+            <div class="container"></div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+
+                    <!--Botão HomePage-->
+                    <li class="nav-item">
+                        <a class="btn" href="#" id="bot_home">Home</a>
+                    </li>
+
+                    <!--Botão de Suporte-->
+                    <li class="nav-item">
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#but_support"
+                            data-bs-whatever="@getbootstrap" id="bot_suporte">Suporte</button>
+                    </li>
+
+                    <!--ModalSuporte-->
+                    <div class="modal fade" id="but_support" tabindex="-1" aria-labelledby="ModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <!--Título do Modal-->
+                                <div class="modal-header"
+                                    style="background-image: linear-gradient(to left, #bb8bff, white)">
+                                    <h1 class="modal-title fs-5" id="ModalLabel">Atendimento e Suporte</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <!--Corpo do Modal-->
+                                <div class="modal-body">
+                                    <form>
+
+                                        <!--Para quem enviar-->
+                                        <div class="mb-3">
+                                            <label for="recipient-name" class="col-form-label">Para:</label>
+                                            <select class="form-select" id="inputGroupSelect01">
+                                                <option selected></option>
+                                                <option value="1">Email 1</option>
+                                                <option value="2">Email 2</option>
+                                                <option value="3">Email 3</option>
+                                            </select>
+                                        </div>
+
+                                        <!--Quem está enviando-->
+                                        <div class="mb-3">
+                                            <label for="recipient-name" class="col-form-label">
+                                                Digite seu email:
+                                            </label>
+                                            <input type="text" class="form-control" id="recipient-name">
+                                        </div>
+
+                                        <!--Mensagem-->
+                                        <div class="mb-3">
+                                            <label for="message-text" class="col-form-label">Mensagem:</label>
+                                            <textarea class="form-control" id="message-text"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!--Rodapé do Modal-->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn"
+                                        style="background-image: linear-gradient(to right, #bb8bff, #6ffff8); color: white; border-radius: 50px;">
+                                        Enviar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Botão Perfil-->
+                    <li class="nav-item">
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#but_profile"
+                            data-bs-whatever="@getbootstrap" id="bot_profile">Perfil</button>
+                    </li>
+
+                    <!--ModalSuporte-->
+                    <div class="modal fade" id="but_profile" tabindex="-1" aria-labelledby="ModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <!--Corpo do Modal-->
+                                <div class="modal-body">
+                                    <form>
+
+                                        <!--Nome do Perfil-->
+                                        <div class="mb-3">
+                                            <h5>
+                                                <strong>NAME AND SURNAME PROFILE</strong>
+                                            </h5>
+                                        </div>
+
+                                        <!--Infos do Perfil-->
+                                        <div class="mb-3">
+                                            <label for="recipient-name" class="col-form-label">
+                                                <p>Curso</p>
+                                                <p>Grupo 0 - Turma 0 - Lab 0</p>
+                                                <p>00.00000-0</p>
+                                            </label>
+                                        </div>
+
+                                        <p style="float: left; "><strong>Tema:</strong></p>
+
+                                        <div id="bot_onoff">
+                                            <div>
+                                                <input id="btn1" type="checkbox" name="" value="">
+                                            </div>
+
+                                            <img src="imagens/Sol_E_Lua_Icon.png" alt="IconSolLua" width="90px">
+                                            
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                                <!--Rodapé do Modal-->
+                                <div class="modal-footer" style="background-image: linear-gradient(to right, #bb8bff, #6ffff8);">
+                                    <p type="button" id="bot_sair">SAIR</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </ul>
+            </div>
+        </div>
+        </div>
+    </nav>
+
+
+    <!--Corpo do Site-->
+    <div style="margin-top: 25px;margin-left: 28px;">
+        <h1>Área do Aluno</h1>
+    </div>
+    <div class="m-4">
+        <div class="card">
+            <div class="card-header">
+                <!--Menu de Opções-->
+                <ul class="nav nav-pills card-header-pills" id="myTab">
+                    <li class="nav-item">
+                        <a href="#presence" class="nav-link active" data-bs-toggle="tab">Presença</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#config" class="nav-link" data-bs-toggle="tab">Configurações</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#messages" class="nav-link" data-bs-toggle="tab">Messages</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card-body">
+                <div class="tab-content">
+
+                    <!--Area de Presença-->
+                    <div class="tab-pane fade show active" id="presence">
+                        <!--Corpo da Opção PRESENÇA-->
+                        <div class="card-body" style="margin-top: 0px;">
+                            <h2 class="card-title">
+                                Aulas -
+                                <script language=javascript type="text/javascript">
+                                    data = new Date;
+
+                                    dia_sem = data.getDay();
+                                    dia_date = data.getDate();
+                                    dia_mes = data.getMonth();
+
+                                    var dias = new Array('Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado');
+
+                                    document.write((dias[data.getDay()]) + ' - ' + (dia_date) + '/' + (dia_mes + 1));
+                                </script>
+                            </h2>
+
+                            <!--Aulas-->
+                            <div class="row row-cols-1 row-cols-md-3 g-4" style="margin-top: 10px;">
+
+                                <!--CARD 1-->
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header"
+                                            style="background-image: linear-gradient(to right, #bb8bff, #6ffff8);">
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">TTI201 - ALGORITMO,ESTRUTURAS DE DADOS E PROGRAMAÇÃO
+                                            </h5>
+                                            <h6 class="card-title">Prof. Name and Surname</h6>
+                                            <p class="card-text">07H40 - 9H20</p>
+                                            <p class="card-text">Status: Concluída</p>
+                                        </div>
+                                        <div class="card-footer text-center" style="background-color: lightgreen;">
+                                            <p style="margin: 7px; color: green;">Presença Confirmada!</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--CARD 2-->
+                                <div class="col">
+                                    <div class="card">
+
+                                        <div class="card-header"
+                                            style="background-image:linear-gradient(to right, #6ffff8, #bb8bff)">
+                                        </div>
+
+                                        <div class="card-body">
+                                            <h5 class="card-title">TTI201 - ALGORITMO,ESTRUTURAS DE DADOS E PROGRAMAÇÃO
+                                            </h5>
+                                            <h6 class="card-title">Prof. Name and Surname</h6>
+                                            <p class="card-text">09H30 - 11H10</p>
+                                            <p class="card-text">Status: Em processo</p>
+                                        </div>
+
+                                        <div class="card-footer">
+
+                                            <!--BotãoQR-->
+                                            <button type="button" class="btn btn-light" data-bs-toggle="modal"
+                                                data-bs-target="#but_qr" data-bs-whatever="@getbootstrap">QR
+                                                CODE</button>
+
+                                            <!--ModalQR-->
+                                            <div class="modal fade" id="but_qr" tabindex="-1"
+                                                aria-labelledby="ModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+
+                                                        <!--Título do Modal-->
+                                                        <div class="modal-header"
+                                                            style="background-image: linear-gradient(to left, #bb8bff, white)">
+                                                            <h1 class="modal-title fs-5" id="ModalLabel">LEITOR QR</h1>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+
+                                                        <!--Corpo do Modal-->
+                                                        <div class="modal-body text-center">
+                                                            <form>
+
+                                                                <!--CamScreen-->
+                                                                <script href="/CamTest.js"></script>
+
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--BotãoChave-->
+                                            <button type="button" class="btn btn-light" data-bs-toggle="modal"
+                                                data-bs-target="#but_key"
+                                                data-bs-whatever="@getbootstrap">CHAVE</button>
+
+                                            <!--ModalChave-->
+                                            <div class="modal fade" id="but_key" tabindex="-1"
+                                                aria-labelledby="ModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+
+                                                        <!--Título do Modal-->
+                                                        <div class="modal-header"
+                                                            style="background-image: linear-gradient(to left, #bb8bff, white)">
+                                                            <h1 class="modal-title fs-5" id="ModalLabel">CHAVE ALEATÓRIA
+                                                            </h1>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+
+                                                        <!--Corpo do Modal-->
+                                                        <div class="modal-body text-center">
+                                                            <form>
+
+                                                                <!--Código-->
+                                                                <div class="mb-3">
+                                                                    <label for="recipient-name"
+                                                                        class="col-form-label"><strong>INSIRA O
+                                                                            CÓDIGO</strong></label>
+
+                                                                    <div class="input-group input-group-lg">
+                                                                        <input type="text"
+                                                                            class="form-control border-black"
+                                                                            aria-label="Sizing example input"
+                                                                            aria-describedby="inputGroup-sizing-lg">
+
+                                                                        <button class="btn btn-outline-secondary"
+                                                                            type="button"
+                                                                            id="button-addon1">Enviar</button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--CARD 3-->
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header"></div>
+                                        <div class="card-body">
+                                            <div style="color: gray;">
+                                                <h5 class="card-title">TTI201 - ALGORITMO,ESTRUTURAS DE DADOS E
+                                                    PROGRAMAÇÃO</h5>
+                                                <h6 class="card-title">Prof. Name and Surname</h6>
+                                                <p class="card-text">11H30 - 13H00</p>
+                                                <p class="card-text">Status: Fechada</p>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <button type="button" class="btn btn-light disabled">QR CODE</button>
+                                            <button type="button" class="btn btn-light disabled">CHAVE</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <p class="text-center" style="color: gray; margin-top: 20px; margin-bottom: 20px;"> Não há mais
+                            aulas cadastradas.</p>
+                    </div>
+                </div>
+
+                <!--Area de Configurações-->
+                <div class="tab-pane fade" id="config">
+
+                </div>
+
+                <div class="tab-pane fade" id="messages">
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+    <footer>
+
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
