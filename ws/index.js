@@ -6,6 +6,7 @@ const flash = require('connect-flash');
 const exphbs = require('express-handlebars');
 const app = express();
 const bodyParser = require('body-parser');
+const cookieParser = require("cookie-parser")
 const admin = require('./src/routes/admin.routes');
 const aluno = require("./src/routes/aluno.routes");
 const professor = require("./src/routes/professor.routes");
@@ -34,7 +35,8 @@ require('./database');
   app.use(express.json());  
   app.use(cors());
   app.use(bodyParser.urlencoded({extended: true}));
-  app.use(bodyParser.json())
+  app.use(bodyParser.json());
+  app.use(cookieParser());
 
 // Variables
 app.set("port", 8000);
