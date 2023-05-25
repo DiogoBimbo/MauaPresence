@@ -12,35 +12,29 @@ router.get("/login", (req, res) => {
 
 router.get("/dashboard", async (req, res) => {
   const token = req.cookies.token;
-
   if (!token) {
     res.redirect("/professor/login");
     return;
   }
-
   try {
     const decoded = jwt.verify(token, "chave_secreta");
-
     const professor = await Professor.findOne({ email: decoded.email });
-
     if (!professor) {
       res.redirect("/professor/login");
       return;
     }
-    
-    const aulas = await Aula.find({ id_professor: professor._id }).populate("id_materia").lean();
-
-    // Mapear o nome da matéria em cada aula
-    const aulasComNomeMateria = aulas.map(aula => ({
+    const aulas = await Aula.find({ id_professor: professor._id })
+      .populate("id_materia")
+      .lean();
+    const aulasComNomeMateria = aulas.map((aula) => ({
       ...aula,
-      nome_materia: aula.id_materia.nome
+      nome_materia: aula.id_materia.nome,
     }));
-
     res.render("professor/dashboard", {
       nome_completo: professor.nome_completo,
       email: professor.email,
       ra: professor.ra,
-      aulas: aulasComNomeMateria
+      aulas: aulasComNomeMateria,
     });
   } catch (error) {
     console.error("Erro ao verificar token:", error);
@@ -48,20 +42,15 @@ router.get("/dashboard", async (req, res) => {
   }
 });
 
-// Rota de login
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, senha } = req.body;
-
   try {
     const professor = await Professor.findOne({ email });
-
     if (!professor) {
       res.json({ success: false });
       return;
     }
-
     const senhaCorreta = await bcrypt.compare(senha, professor.senha);
-
     if (senhaCorreta) {
       const token = jwt.sign({ email: professor.email }, "chave_secreta");
       res.cookie("token", token);

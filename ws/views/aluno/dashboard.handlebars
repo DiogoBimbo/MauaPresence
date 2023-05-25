@@ -1,0 +1,28 @@
+<h1>Dashboard do Aluno</h1>
+<h2>Informações do Aluno:</h2>
+<p>Nome Completo: {{aluno.nome_completo}}</p>
+<p>Email: {{aluno.email}}</p>
+<p>RA: {{aluno.ra}}</p>
+<p>Grupo: {{aluno.grupo}}</p>
+<p>Turma: {{aluno.turma}}</p>
+<p>Lab: {{aluno.lab}}</p>
+
+<h2>Suas Aulas:</h2>
+{{#if aulas}}
+    <ul>
+        {{#each aulas}}
+            <li>
+                <h3>Horário: {{horario_inicio}} - {{horario_fim}}</h3>
+                <p>Tipo: {{tipo_aula}}</p>
+                <p>Matéria: {{id_materia.nome_materia}}</p>
+                <p>Dia da Semana: {{dia_semana}}</p>
+                <p>Sala: {{sala}}</p>
+                <p>Grupo: {{grupo}}</p>
+                <p>Turma: {{turma}}</p>
+                <p>Lab: {{lab}}</p>
+            </li>
+        {{/each}}
+    </ul>
+{{else}}
+    <p>Não há aulas disponíveis.</p>
+{{/if}}
