@@ -13,7 +13,7 @@ const CursoMateria = require("../models/cursoMateria");
 const Aluno = require("../models/aluno");
 const AlunoMateria = require("../models/alunoMateria");
 const Professor = require("../models/professor");
-const Aula = require("../models/Aula");
+const Aula = require("../models/aula");
 
 // rota principal ADM
 router.get("/", async (req, res) => {

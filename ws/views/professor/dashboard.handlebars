@@ -1,6 +1,23 @@
-<h1>Bem-vindo, {{ nome_completo }}!</h1>
-
-<p>Email: {{ email }}</p>
-<p>RA: {{ ra }}</p>
-
-<p>Esta é a tela do professor</p>
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Suas aulas:</h5>
+    {{#each aulas}}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">
+          Horário: {{ horario_inicio }} - {{ horario_fim }}
+        </h6>
+        <p class="card-text">Tipo: {{ tipo_aula }}</p>
+        <p class="card-text">Matéria: {{ id_materia.nome_materia }}</p>
+        <p class="card-text">Dia da semana: {{ dia_semana }}</p>
+        <p class="card-text">Sala: {{ sala }}</p>
+        <p class="card-text">Grupo: {{ grupo }}</p>
+        <p class="card-text">Turma: {{ turma }}</p>
+        <p class="card-text">Lab: {{ lab }}</p>
+        <button class="btn btn-primary">Gerar QR Code</button>
+        <button class="btn btn-secondary">Gerar Código</button>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</div>
