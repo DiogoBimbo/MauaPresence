@@ -982,6 +982,76 @@ router.post("/professores/novo", async (req, res) => {
     });
 });
 
+//rota de edição do Professor que carrega o formulário 
+router.get("/professores/editar/:id", async (req, res) =>{
+  Professor.findOne({_id: req.params.id}).lean().then((professor) => {
+    res.render("admin/editar_professores", {professor:professor});
+  }).catch((err) => {
+    req.flash("error_msg", "Houve um erro ao carregar o formulário de edição");
+    res.redirect("/admin/professores")
+  });
+});
+
+//rota de edição do Professor que salva o professor editado - Obs : mesma validação (modularizar o JOI)
+router.post("/professores/editar", async (req, res) => {
+  const id = req.body.id;
+  const edicaoProfessor = {
+    ra: req.body.ra,
+    nome_completo: req.body.nome_completo,
+    email: req.body.email,
+  };
+
+  try {
+    // Validação dos campos usando Joi
+    const schema = Joi.object({
+      ra: Joi.string().required().length(10).messages({
+        "any.required": "O campo RA do professor é obrigatório",
+        "string.empty": "Por favor, informe um valor para o RA do professor",
+        "string.length":
+          "O RA deve possuir 10 caracteres, incluindo o ponto e traço",
+      }),
+      nome_completo: Joi.string().required().messages({
+        "any.required": "O campo nome do professor é obrigatório",
+        "string.empty": "Por favor, informe o nome do professor.",
+      }),
+      email: Joi.string().email().required().messages({
+        "any.required": "O campo email do professor é obrigatório",
+        "string.empty": "Por favor, informe um valor para o email do professor",
+        "string.email": "Por favor, informe um email válido",
+      }),
+    });
+
+    const { error } = schema.validate(edicaoProfessor);
+    if (error) {
+      req.flash("error_msg", "Erro ao editar Professor: " + error.details[0].message);
+      res.redirect(`/admin/professores/editar/${id}`);
+      return;
+    }
+
+    // Verifica se já existe algum professor cadastrado com o mesmo RA
+    const professorExistente = await Professor.findOne({ ra: edicaoProfessor.ra });
+    if (professorExistente && professorExistente._id != id) {
+      req.flash("error_msg", "Já existe um professor cadastrado com este RA");
+      res.redirect(`/admin/professores/editar/${id}`);
+      return;
+    }
+
+    const professor = await Professor.findOne({ _id: id });
+
+    professor.ra = edicaoProfessor.ra;
+    professor.nome_completo = edicaoProfessor.nome_completo;
+    professor.email = edicaoProfessor.email;
+    
+    await professor.save();
+
+    req.flash("success_msg", "Professor editado com sucesso");
+    res.redirect("/admin/professores");
+  } catch (err) {
+    req.flash("error_msg", "Houve um erro ao salvar a edição");
+    res.redirect("/admin/professores");
+  }
+});
+
 // rota que faz a listagem das Aulas
 router.get("/aulas", async (req, res) => {
   Aula.find().populate("id_professor").populate("id_materia").lean().then((aulas) => {
@@ -1095,6 +1165,119 @@ router.post("/aulas/novo", async (req, res) => {
       req.flash("error_msg", "Erro ao aula");
       res.redirect("/admin/aulas/cadastrar");
     });
+});
+
+//rota de edição da aula que carrega o formulário
+router.get("/aulas/editar/:id", async (req, res) =>{
+  Aula.findOne({_id: req.params.id}).populate("id_materia").populate("id_professor").lean().then((aula) => { 
+    Promise.all([Professor.find().lean(), Materia.find().lean()])
+    .then(([professor, materia]) => {
+      res.render("admin/editar_aulas", { professor:professor, materia:materia, aula:aula, });
+    })
+    .catch((err) => {
+      req.flash("error_msg", "Houve um erro ao carregar o formulário de edição");
+      res.redirect("/admin/aulas");
+    });
+
+  }).catch((err) => {
+    req.flash("error_msg", "Houve um erro ao carregar o formulário de edição");
+    res.redirect("/admin/aulas")
+  });
+});
+
+//rota de edição da Aula que salva a aula editada - Obs : mesma validação (modularizar o JOI)
+router.post("/aulas/editar", async (req, res) => {
+  const id = req.body.id;
+  const edicaoAula = {
+    horario_inicio: req.body.horario_inicio,
+    horario_fim: req.body.horario_fim,
+    tipo_aula: req.body.tipo_aula,
+    id_materia: req.body.id_materia,
+    id_professor: req.body.id_professor,
+    dia_semana: req.body.dia_semana,
+    sala: req.body.sala,
+    grupo: req.body.grupo,
+    turma: req.body.turma,
+    lab: req.body.lab,
+  };
+
+  try {
+    // Validação dos campos usando Joi
+    const schema = Joi.object({
+      horario_inicio: Joi.string().length(5).required().messages({
+        "any.required": "O campo horário de início é obrigatório",
+        "string.empty": "Por favor, informe o horário de início",
+        "string.length": "O campo horário de início deve possuir 5 caracteres, incluindo o dois pontos"
+      }),
+      horario_fim: Joi.string().length(5).required().messages({
+        "any.required": "O campo horário de fim é obrigatório",
+        "string.empty": "Por favor, informe o horário de fim",
+        "string.length": "O campo horário de fim deve possuir 5 caracteres, incluindo o dois pontos" 
+      }),
+      tipo_aula: Joi.string().valid("TEO", "LAB").required().messages({
+        "any.required": "O campo tipo de aula é obrigatório",
+        "string.empty": "Por favor, selecione um tipo de aula",
+        "any.only": "O tipo de aula deve ser TEO ou LAB",
+      }),
+      id_materia: Joi.string().required().messages({
+        "any.required": "O campo matéria é obrigatório",
+        "string.empty": "Por favor, selecione uma matéria",
+      }),
+      id_professor: Joi.string().required().messages({
+        "any.required": "O campo professor é obrigatório",
+        "string.empty": "Por favor, selecione um professor",
+      }),
+      dia_semana: Joi.string().valid(
+        "Domingo",
+        "Segunda-feira",
+        "Terça-feira",
+        "Quarta-feira",
+        "Quinta-feira",
+        "Sexta-feira",
+        "Sábado"
+      ).required().messages({
+        "any.required": "O campo dia da semana é obrigatório",
+        "string.empty": "Por favor, selecione um dia da semana",
+        "any.only": "O dia da semana selecionado não é válido",
+      }),
+      sala: Joi.string().required().messages({
+        "any.required": "O campo sala é obrigatório",
+        "string.empty": "Por favor, informe a sala",
+      }),
+      grupo: Joi.string().allow('').optional(),
+      turma: Joi.string().allow('').optional(),
+      lab: Joi.string().allow('').optional(),
+    });
+
+
+    const { error } = schema.validate(edicaoAula);
+    if (error) {
+      req.flash("error_msg", "Erro ao editar Aula: " + error.details[0].message);
+      res.redirect(`/admin/aulas/editar/${id}`);
+      return;
+    }
+
+    const aula = await Aula.findOne({ _id: id });
+
+    aula.horario_inicio = edicaoAula.horario_inicio;
+    aula.horario_fim = edicaoAula.horario_fim;
+    aula.tipo_aula = edicaoAula.tipo_aula;
+    aula.id_materia = edicaoAula.id_materia;
+    aula.id_professor = edicaoAula.id_professor;
+    aula.dia_semana = edicaoAula.dia_semana;
+    aula.sala = edicaoAula.sala;
+    aula.grupo = edicaoAula.grupo;
+    aula.turma = edicaoAula.turma
+    aula.lab = edicaoAula.lab;
+    
+    await aula.save();
+
+    req.flash("success_msg", "Aula editada com sucesso");
+    res.redirect("/admin/aulas");
+  } catch (err) {
+    req.flash("error_msg", "Houve um erro ao salvar a edição");
+    res.redirect("/admin/aulas");
+  }
 });
 
 // const wifiName = require("wifi-name");
