@@ -194,6 +194,17 @@ router.post("/cursos/editar", async (req, res) => {
   }
 });
 
+//rota que deleta o Curso
+router.get("/cursos/deletar/:id", async (req, res) => {
+  Curso.deleteOne({_id: req.params.id}).then(() =>{
+    req.flash("success_msg", "Curso deletado com sucesso");
+    res.redirect("/admin/cursos");
+  }).catch((err) => {
+    req.flash("error_msg", "Houve um erro interno");
+    res.redirect("/admin/cursos");
+  });
+});
+
 // rota que faz a listagem das Matérias
 router.get("/materias", async (req, res) => {
   Materia.find().lean().then((materias) => {
@@ -347,6 +358,17 @@ router.post("/materias/editar", async (req, res) => {
     req.flash("error_msg", "Houve um erro ao salvar a edição");
     res.redirect("/admin/materias");
   }
+});
+
+//rota que deleta a Matéria
+router.get("/materias/deletar/:id", async (req, res) => {
+  Materia.deleteOne({_id: req.params.id}).then(() =>{
+    req.flash("success_msg", "Matéria deletada com sucesso");
+    res.redirect("/admin/materias");
+  }).catch((err) => {
+    req.flash("error_msg", "Houve um erro interno");
+    res.redirect("/admin/materias");
+  });
 });
 
 // rota que faz a listagem do cursoMatérias
@@ -512,6 +534,17 @@ router.post("/cursoMaterias/editar", async (req, res) => {
     req.flash("error_msg", "Houve um erro ao salvar a edição");
     res.redirect("/admin/cursoMaterias");
   }
+});
+
+//rota que deleta o cursoMatéria
+router.get("/cursoMaterias/deletar/:id", async (req, res) => {
+  CursoMateria.deleteOne({_id: req.params.id}).then(() =>{
+    req.flash("success_msg", "Curso-Matéria deletado com sucesso");
+    res.redirect("/admin/cursoMaterias");
+  }).catch((err) => {
+    req.flash("error_msg", "Houve um erro interno");
+    res.redirect("/admin/cursoMaterias");
+  });
 });
 
 // rota que faz a listagem dos Alunos
@@ -735,6 +768,17 @@ router.post("/alunos/editar", async (req, res) => {
   }
 });
 
+//rota que deleta o Curso
+router.get("/alunos/deletar/:id", async (req, res) => {
+  Aluno.deleteOne({_id: req.params.id}).then(() =>{
+    req.flash("success_msg", "Aluno deletado com sucesso");
+    res.redirect("/admin/alunos");
+  }).catch((err) => {
+    req.flash("error_msg", "Houve um erro interno");
+    res.redirect("/admin/alunos");
+  });
+});
+
 // rota que faz a listagem dos alunoMatérias
 router.get("/alunoMaterias", async (req, res) => {
   AlunoMateria.find().populate("id_aluno").populate("id_materia").lean().then((alunoMaterias) => {
@@ -900,6 +944,17 @@ router.post("/alunoMaterias/editar", async (req, res) => {
   }
 });
 
+//rota que deleta o alunoMatéria
+router.get("/alunoMaterias/deletar/:id", async (req, res) => {
+  AlunoMateria.deleteOne({_id: req.params.id}).then(() =>{
+    req.flash("success_msg", "Aluno-Matéria deletado com sucesso");
+    res.redirect("/admin/alunoMaterias");
+  }).catch((err) => {
+    req.flash("error_msg", "Houve um erro interno");
+    res.redirect("/admin/alunoMaterias");
+  });
+});
+
 // rotas que faz a listagem dos Professores
 router.get("/professores", async (req, res) => {
   Professor.find().lean().then((professores) => {
@@ -1050,6 +1105,17 @@ router.post("/professores/editar", async (req, res) => {
     req.flash("error_msg", "Houve um erro ao salvar a edição");
     res.redirect("/admin/professores");
   }
+});
+
+//rota que deleta o Professor
+router.get("/professores/deletar/:id", async (req, res) => {
+  Professor.deleteOne({_id: req.params.id}).then(() =>{
+    req.flash("success_msg", "Professor deletado com sucesso");
+    res.redirect("/admin/professores");
+  }).catch((err) => {
+    req.flash("error_msg", "Houve um erro interno");
+    res.redirect("/admin/professores");
+  });
 });
 
 // rota que faz a listagem das Aulas
@@ -1278,6 +1344,17 @@ router.post("/aulas/editar", async (req, res) => {
     req.flash("error_msg", "Houve um erro ao salvar a edição");
     res.redirect("/admin/aulas");
   }
+});
+
+//rota que deleta a Aula
+router.get("/aulas/deletar/:id", async (req, res) => {
+  Aula.deleteOne({_id: req.params.id}).then(() =>{
+    req.flash("success_msg", "Aula deletada com sucesso");
+    res.redirect("/admin/aulas");
+  }).catch((err) => {
+    req.flash("error_msg", "Houve um erro interno");
+    res.redirect("/admin/aulas");
+  });
 });
 
 // const wifiName = require("wifi-name");

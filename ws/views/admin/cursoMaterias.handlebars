@@ -14,7 +14,8 @@
             {{#each id_materia}}
               <p>{{cod_materia}}: {{nome_materia}}</p>
             {{/each}}
-            <a href="/admin/cursoMaterias/editar/{{_id}}"><button class="btn btn-success">Editar cursoMatéria</button></a>
+            <a href="/admin/cursoMaterias/editar/{{_id}}"><button class="btn btn-success">Editar Curso-Matéria</button></a>
+            <a href="/admin/cursoMaterias/deletar/{{_id}}"><button class="btn btn-danger">Deletar Curso-Matéria</button></a>
         </div>
     </div>
 {{else}}
