@@ -14,10 +14,43 @@
         <p class="card-text">Grupo: {{ grupo }}</p>
         <p class="card-text">Turma: {{ turma }}</p>
         <p class="card-text">Lab: {{ lab }}</p>
-        <button class="btn btn-primary">Gerar QR Code</button>
-        <button class="btn btn-secondary">Gerar Código</button>
+        <button class="btn btn-primary" onclick="generateQRCode('{{ _id }}')">Gerar QR Code</button>
+        <button class="btn btn-secondary" onclick="generateRandomCode('{{ _id }}')">Gerar Código</button>
+        <div class="code-container" id="code-container-{{ _id }}">
+          {{#if codigoPresenca}}
+            Código: {{ codigoPresenca }}
+          {{/if}}
+        </div>
       </div>
     </div>
     {{/each}}
   </div>
 </div>
+
+<script>
+  function generateQRCode(aulaId) {
+    // Implemente a lógica para gerar o QR Code com base no aulaId
+  }
+
+  function generateRandomCode(aulaId) {
+    const codeContainer = document.getElementById(`code-container-${aulaId}`);
+    if (codeContainer.innerText.trim() !== "") {
+      return;
+    }
+
+    fetch(`/professor/gerar-codigo/${aulaId}`, {
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          codeContainer.innerText = `Código: ${data.codigo}`;
+        } else {
+          console.error("Erro ao gerar código:", data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Erro ao gerar código:", error);
+      });
+  }
+</script>

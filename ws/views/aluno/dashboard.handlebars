@@ -1,53 +1,69 @@
-<h1 class="mb-4">Bem-vindo(a), {{aluno.nome_completo}}!</h1>
-<h2 class="mt-5">Dados do Aluno:</h2>
-<ul class="list-group mb-4">
-  <li class="list-group-item"><strong>Nome Completo:</strong> {{aluno.nome_completo}}</li>
-  <li class="list-group-item"><strong>Email:</strong> {{aluno.email}}</li>
-  <li class="list-group-item"><strong>RA:</strong> {{aluno.ra}}</li>
-  <li class="list-group-item"><strong>Grupo:</strong> {{aluno.grupo}}</li>
-  <li class="list-group-item"><strong>Turma:</strong> {{aluno.turma}}</li>
-  <li class="list-group-item"><strong>Lab:</strong> {{aluno.lab}}</li>
-</ul>
+{{#if aluno}}
+  <h1 class="mb-4">Bem-vindo(a), {{aluno.nome_completo}}!</h1>
+  <h2 class="mt-5">Dados do Aluno:</h2>
+  <ul class="list-group mb-4">
+    <li class="list-group-item"><strong>Nome Completo:</strong>
+      {{aluno.nome_completo}}</li>
+    <li class="list-group-item"><strong>Email:</strong> {{aluno.email}}</li>
+    <li class="list-group-item"><strong>RA:</strong> {{aluno.ra}}</li>
+    <li class="list-group-item"><strong>Grupo:</strong> {{aluno.grupo}}</li>
+    <li class="list-group-item"><strong>Turma:</strong> {{aluno.turma}}</li>
+    <li class="list-group-item"><strong>Lab:</strong> {{aluno.lab}}</li>
+  </ul>
 
-<h2>Aulas:</h2>
-{{#if aulas.length}}
-  <div class="table-responsive">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Matéria</th>
-          <th>Horário de Início</th>
-          <th>Horário de Fim</th>
-          <th>Tipo de Aula</th>
-          <th>Dia da Semana</th>
-          <th>Sala</th>
-          <th>Grupo</th>
-          <th>Turma</th>
-          <th>Lab</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each aulas}}
+  <h2>Aulas:</h2>
+  {{#if aulas.length}}
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
           <tr>
-            <td>{{this.id_materia.nome_materia}}</td>
-            <td>{{this.horario_inicio}}</td>
-            <td>{{this.horario_fim}}</td>
-            <td>{{this.tipo_aula}}</td>
-            <td>{{this.dia_semana}}</td>
-            <td>{{this.sala}}</td>
-            <td>{{this.grupo}}</td>
-            <td>{{this.turma}}</td>
-            <td>{{this.lab}}</td>
-            <td>
-              <button class="btn btn-primary">Ler QR Code</button>
-              <button class="btn btn-secondary">Escrever Código Aleatório</button>
-            </td>
+            <th>Matéria</th>
+            <th>Horário de Início</th>
+            <th>Horário de Fim</th>
+            <th>Tipo de Aula</th>
+            <th>Dia da Semana</th>
+            <th>Sala</th>
+            <th>Grupo</th>
+            <th>Turma</th>
+            <th>Lab</th>
+            <th>Ações</th>
           </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  </div>
+        </thead>
+        <tbody>
+          {{#each aulas}}
+            <tr>
+              <td>{{this.id_materia.nome_materia}}</td>
+              <td>{{this.horario_inicio}}</td>
+              <td>{{this.horario_fim}}</td>
+              <td>{{this.tipo_aula}}</td>
+              <td>{{this.dia_semana}}</td>
+              <td>{{this.sala}}</td>
+              <td>{{this.grupo}}</td>
+              <td>{{this.turma}}</td>
+              <td>{{this.lab}}</td>
+              <td>
+                <form
+                  action="/aluno/marcar-presenca/{{this._id}}"
+                  method="POST"
+                >
+                  <input
+                    type="text"
+                    name="codigo"
+                    placeholder="Digite o código"
+                  />
+                  <button type="submit" class="btn btn-primary">Marcar Presença</button>
+                </form>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  {{else}}
+    <p>Não há aulas disponíveis no momento.</p>
+  {{/if}}
 {{else}}
-  <p>Não há aulas disponíveis no momento.</p>
+  <p>Você não está autenticado. Faça
+    <a href="/aluno/login">login</a>
+    para acessar o dashboard.</p>
 {{/if}}
