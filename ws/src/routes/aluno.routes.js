@@ -5,6 +5,7 @@ const router = express.Router();
 
 const Aula = require("../models/aula");
 const Aluno = require("../models/aluno");
+const AlunoMateria = require("../models/alunoMateria");
 
 router.get("/login", (req, res) => {
   res.render("aluno/login");
@@ -23,9 +24,30 @@ router.get("/dashboard", async (req, res) => {
       res.redirect("/aluno/login");
       return;
     }
-    const aulas = await Aula.find({ id_aluno: aluno._id })
+
+    const alunoMateria = await AlunoMateria.findOne({ id_aluno: aluno._id }).lean();
+    if (!alunoMateria) {
+      // Nenhum registro de AlunoMateria encontrado
+      res.render("aluno/dashboard", {
+        aluno: {
+          nome_completo: aluno.nome_completo,
+          email: aluno.email,
+          ra: aluno.ra,
+          grupo: aluno.grupo,
+          turma: aluno.turma,
+          lab: aluno.lab,
+        },
+        aulas: [], // Não há aulas para exibir
+      });
+      return;
+    }
+
+    const idMaterias = alunoMateria.id_materia;
+
+    const aulas = await Aula.find({ id_materia: { $in: idMaterias } })
       .populate("id_materia")
       .lean();
+
     res.render("aluno/dashboard", {
       aluno: {
         nome_completo: aluno.nome_completo,
@@ -41,7 +63,9 @@ router.get("/dashboard", async (req, res) => {
     console.error("Erro ao exibir o dashboard do aluno:", error);
     res.status(500).json({ message: "Erro ao exibir o dashboard do aluno" });
   }
-}); 
+});
+
+
 
 router.post("/login", async (req, res) => {
   const { email, senha } = req.body;
@@ -66,3 +90,4 @@ router.post("/login", async (req, res) => {
 });
 
 module.exports = router;
+ 

@@ -1,28 +1,53 @@
-<h1>Dashboard do Aluno</h1>
-<h2>Informações do Aluno:</h2>
-<p>Nome Completo: {{aluno.nome_completo}}</p>
-<p>Email: {{aluno.email}}</p>
-<p>RA: {{aluno.ra}}</p>
-<p>Grupo: {{aluno.grupo}}</p>
-<p>Turma: {{aluno.turma}}</p>
-<p>Lab: {{aluno.lab}}</p>
+<h1 class="mb-4">Bem-vindo(a), {{aluno.nome_completo}}!</h1>
+<h2 class="mt-5">Dados do Aluno:</h2>
+<ul class="list-group mb-4">
+  <li class="list-group-item"><strong>Nome Completo:</strong> {{aluno.nome_completo}}</li>
+  <li class="list-group-item"><strong>Email:</strong> {{aluno.email}}</li>
+  <li class="list-group-item"><strong>RA:</strong> {{aluno.ra}}</li>
+  <li class="list-group-item"><strong>Grupo:</strong> {{aluno.grupo}}</li>
+  <li class="list-group-item"><strong>Turma:</strong> {{aluno.turma}}</li>
+  <li class="list-group-item"><strong>Lab:</strong> {{aluno.lab}}</li>
+</ul>
 
-<h2>Suas Aulas:</h2>
-{{#if aulas}}
-    <ul>
+<h2>Aulas:</h2>
+{{#if aulas.length}}
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Matéria</th>
+          <th>Horário de Início</th>
+          <th>Horário de Fim</th>
+          <th>Tipo de Aula</th>
+          <th>Dia da Semana</th>
+          <th>Sala</th>
+          <th>Grupo</th>
+          <th>Turma</th>
+          <th>Lab</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
         {{#each aulas}}
-            <li>
-                <h3>Horário: {{horario_inicio}} - {{horario_fim}}</h3>
-                <p>Tipo: {{tipo_aula}}</p>
-                <p>Matéria: {{id_materia.nome_materia}}</p>
-                <p>Dia da Semana: {{dia_semana}}</p>
-                <p>Sala: {{sala}}</p>
-                <p>Grupo: {{grupo}}</p>
-                <p>Turma: {{turma}}</p>
-                <p>Lab: {{lab}}</p>
-            </li>
+          <tr>
+            <td>{{this.id_materia.nome_materia}}</td>
+            <td>{{this.horario_inicio}}</td>
+            <td>{{this.horario_fim}}</td>
+            <td>{{this.tipo_aula}}</td>
+            <td>{{this.dia_semana}}</td>
+            <td>{{this.sala}}</td>
+            <td>{{this.grupo}}</td>
+            <td>{{this.turma}}</td>
+            <td>{{this.lab}}</td>
+            <td>
+              <button class="btn btn-primary">Ler QR Code</button>
+              <button class="btn btn-secondary">Escrever Código Aleatório</button>
+            </td>
+          </tr>
         {{/each}}
-    </ul>
+      </tbody>
+    </table>
+  </div>
 {{else}}
-    <p>Não há aulas disponíveis.</p>
+  <p>Não há aulas disponíveis no momento.</p>
 {{/if}}
