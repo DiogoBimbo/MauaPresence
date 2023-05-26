@@ -1,0 +1,56 @@
+<h3>Editar o Curso e suas respectivas matérias:</h3>
+<div class="card">
+    <div class="card-body">
+        <form action="/admin/cursoMaterias/editar" method="POST">
+            <input type="hidden" name="id" value="{{cursoMateria._id}}">
+            <label for="id_curso">Curso:</label>
+            <div id="selectContainer">
+                <select name="id_curso" class="form-select">
+                    <option class="text-primary" value="{{cursoMateria.id_curso._id}}">{{cursoMateria.id_curso.nome_curso}}</option>
+                    {{#each curso}}
+                    <option value="{{_id}}">{{nome_curso}}</option>
+                    {{/each}}
+                </select>
+                <label for="id_curso">Matérias:</label>
+                {{#each cursoMateria.id_materia}}
+                <select name="id_materia" class="form-select mb-2">
+                    <option class="text-primary" value="{{_id}}">{{nome_materia}}</option>
+                    {{#with this}}
+                        {{#each ../materia}}
+                            <option value="{{_id}}">{{nome_materia}}</option>
+                        {{/each}}
+                    {{/with}}
+                </select>
+                {{/each}}
+            </div>
+            <button type="submit" class="btn btn-success mt-3">Editar matérias no curso</button>
+            <button class="btn btn-primary mt-3" type="button" onclick="adicionarCampo()">Adicionar matéria</button>
+            <button class="btn btn-danger mt-3" type="button" onclick="removerCampo()" id="btn_remover">Remover matéria</button>
+        </form>
+    </div>
+</div>
+<script>
+function adicionarCampo() {
+    var selectContainer = document.getElementById('selectContainer');
+    var novoSelect = document.createElement('select');
+    novoSelect.name = 'id_materia';
+    novoSelect.className = 'form-select mb-2';
+
+    {{#each materia}}
+    var option = document.createElement('option');
+    option.value = '{{_id}}';
+    option.text = '{{nome_materia}}';
+    novoSelect.appendChild(option);
+    {{/each}}
+
+    selectContainer.appendChild(novoSelect);
+}
+
+function removerCampo() {
+    var selectContainer = document.getElementById('selectContainer');
+    var selects = selectContainer.getElementsByTagName('select');
+    if (selects.length > 2) {
+        selectContainer.removeChild(selects[selects.length - 1]);
+    }
+}
+</script>
