@@ -1,35 +1,53 @@
-const express = require("express");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const express = require('express');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
-const Aula = require("../models/aula");
-const Aluno = require("../models/aluno");
-const AlunoMateria = require("../models/alunoMateria");
-const aluno = require("../models/aluno");
-const Presenca = require("../models/presenca");
+const Aula = require('../models/aula');
+const Aluno = require('../models/aluno');
+const AlunoMateria = require('../models/alunoMateria');
+const Presenca = require('../models/presenca');
 
-router.get("/login", (req, res) => {
-  res.render("aluno/login");
+function getCurrentDate() {
+  const currentDate = new Date();
+  const timezoneOffset = currentDate.getTimezoneOffset();
+  const adjustedDate = new Date(currentDate.getTime() - timezoneOffset * 60000);
+  return adjustedDate;
+}
+
+function parseTime(timeString) {
+  const [hours, minutes] = timeString.split(':');
+  const parsedTime = new Date();
+  parsedTime.setHours(hours);
+  parsedTime.setMinutes(minutes);
+  return parsedTime;
+}
+
+function isTimeBetween(currentTime, startTime, endTime) {
+  return currentTime >= startTime && currentTime <= endTime;
+}
+
+router.get('/login', (req, res) => {
+  res.render('aluno/login');
 });
 
-router.get("/dashboard", async (req, res) => {
+router.get('/dashboard', async (req, res) => {
   const token = req.cookies.token;
   if (!token) {
-    res.redirect("/aluno/login");
+    res.redirect('/aluno/login');
     return;
   }
   try {
-    const decoded = jwt.verify(token, "chave_secreta");
+    const decoded = jwt.verify(token, 'chave_secreta');
     const aluno = await Aluno.findOne({ email: decoded.email });
     if (!aluno) {
-      res.redirect("/aluno/login");
+      res.redirect('/aluno/login');
       return;
     }
     const alunoMateria = await AlunoMateria.findOne({
       id_aluno: aluno._id,
     }).lean();
     if (!alunoMateria) {
-      res.render("aluno/dashboard", {
+      res.render('aluno/dashboard', {
         aluno: {
           nome_completo: aluno.nome_completo,
           email: aluno.email,
@@ -44,23 +62,23 @@ router.get("/dashboard", async (req, res) => {
     }
     const idMaterias = alunoMateria.id_materia;
     const diasSemana = [
-      "Domingo",
-      "Segunda-feira",
-      "Terça-feira",
-      "Quarta-feira",
-      "Quinta-feira",
-      "Sexta-feira",
-      "Sábado",
+      'Domingo',
+      'Segunda-feira',
+      'Terça-feira',
+      'Quarta-feira',
+      'Quinta-feira',
+      'Sexta-feira',
+      'Sábado',
     ];
-    const hoje = new Date().getUTCDay();
+    const hoje = getCurrentDate().getUTCDay();
     const diaAtual = diasSemana[hoje];
     const aulas = await Aula.find({
       id_materia: { $in: idMaterias },
       dia_semana: diaAtual,
     })
-      .populate("id_materia")
+      .populate('id_materia')
       .lean();
-    res.render("aluno/dashboard", {
+    res.render('aluno/dashboard', {
       aluno: {
         nome_completo: aluno.nome_completo,
         email: aluno.email,
@@ -72,12 +90,12 @@ router.get("/dashboard", async (req, res) => {
       aulas: aulas,
     });
   } catch (error) {
-    console.error("Erro ao exibir o dashboard do aluno:", error);
-    res.status(500).json({ message: "Erro ao exibir o dashboard do aluno" });
+    console.error('Erro ao exibir o dashboard do aluno:', error);
+    res.status(500).json({ message: 'Erro ao exibir o dashboard do aluno' });
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, senha } = req.body;
   try {
     const aluno = await Aluno.findOne({ email });
@@ -87,39 +105,39 @@ router.post("/login", async (req, res) => {
     }
     const senhaCorreta = await bcrypt.compare(senha, aluno.senha);
     if (senhaCorreta) {
-      const token = jwt.sign({ email: aluno.email }, "chave_secreta");
-      res.cookie("token", token);
+      const token = jwt.sign({ email: aluno.email }, 'chave_secreta');
+      res.cookie('token', token);
       res.json({ success: true });
     } else {
       res.json({ success: false });
     }
   } catch (error) {
-    console.error("Erro ao fazer login:", error);
+    console.error('Erro ao fazer login:', error);
     res.json({ success: false });
   }
 });
 
-router.post("/marcar-presenca/:aulaId", async (req, res) => {
+router.post('/marcar-presenca/:aulaId', async (req, res) => {
   const { aulaId } = req.params;
   const { codigo } = req.body;
 
   try {
     const aula = await Aula.findById(aulaId);
     if (!aula) {
-      res.status(404).json({ message: "Aula não encontrada" });
+      res.status(404).json({ message: 'Aula não encontrada' });
       return;
     }
 
     const token = req.cookies.token;
     if (!token) {
-      res.status(401).json({ message: "Token não fornecido" });
+      res.status(401).json({ message: 'Token não fornecido' });
       return;
     }
 
-    const decoded = jwt.verify(token, "chave_secreta");
+    const decoded = jwt.verify(token, 'chave_secreta');
     const aluno = await Aluno.findOne({ email: decoded.email });
     if (!aluno) {
-      res.status(404).json({ message: "Aluno não encontrado" });
+      res.status(404).json({ message: 'Aluno não encontrado' });
       return;
     }
 
@@ -128,29 +146,47 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
     });
 
     if (!presenca) {
-      res.status(404).json({ message: "Presença não encontrada" });
+      res.status(404).json({ message: 'Presença não encontrada' });
       return;
     }
 
     if (presenca.codigo !== codigo) {
-      res.status(400).json({ message: "Código inválido" });
+      res.status(400).json({ message: 'Código inválido' });
       return;
     }
 
-    // Adicione o aluno à lista de id_aluno na presença
-    presenca.id_aluno.push(aluno._id);
+    const currentDateTime = getCurrentDate();
+    const currentHours = Number(currentDateTime.toISOString().split('T')[1].split(':')[0]);
+    const currentMinutes = Number(currentDateTime.toISOString().split('T')[1].split(':')[1]);
+    const currentTime = new Date();
+    currentTime.setHours(currentHours);
+    currentTime.setMinutes(currentMinutes);
 
-    // Atualize o status da presença para "presente"
-    presenca.status = "presente";
-    await presenca.save();
+    const startTime = parseTime(aula.horario_inicio);
+    const endTime = parseTime(aula.horario_fim);
 
-    res.status(200).json({ message: "Presença marcada com sucesso" });
+    if (isTimeBetween(currentTime, startTime, endTime)) {
+      // Verificar se o aluno já marcou presença
+      if (presenca.id_aluno.includes(aluno._id)) {
+        res.status(400).json({ message: 'Presença já marcada' });
+        return;
+      }
+
+      // Adicione o aluno à lista de id_aluno na presença
+      presenca.id_aluno.push(aluno._id);
+
+      // Atualize o status da presença para "presente"
+      presenca.status = 'presente';
+      await presenca.save();
+
+      res.status(200).json({ message: 'Presença marcada com sucesso' });
+    } else {
+      res.status(400).json({ message: 'Não é possível marcar presença fora do horário da aula' });
+    }
   } catch (error) {
-    console.error("Erro ao marcar presença:", error);
-    res.status(500).json({ message: "Erro ao marcar presença" });
+    console.error('Erro ao marcar presença:', error);
+    res.status(500).json({ message: 'Erro ao marcar presença' });
   }
 });
-
-
 
 module.exports = router;

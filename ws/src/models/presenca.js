@@ -6,7 +6,7 @@ const presencaSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
     required: true,
-  },
+  }, 
   id_aula: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Aula',
