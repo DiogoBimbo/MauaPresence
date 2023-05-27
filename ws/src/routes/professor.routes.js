@@ -103,7 +103,7 @@ router.post("/gerar-codigo/:aulaId", async (req, res) => {
     const aula = await Aula.findById(aulaId);
     if (!aula) {
       req.flash("error_msg", "Aula não encontrada.");
-      return res.json({ success: false, message: "Aula não encontrada." });
+      return res.status(404).json({ success: false, message: "Aula não encontrada." });
     }
     const currentDateTime = getCurrentDateTime();
     const currentHours = Number(currentDateTime.split(' ')[1].split(':')[0]);
@@ -119,17 +119,18 @@ router.post("/gerar-codigo/:aulaId", async (req, res) => {
         id_aula: aulaId,
         data: new Date(currentDateTime),
         codigo: codigo,
-      });
+      }); 
       await presenca.save();
-      return res.json({ success: true, message: "Código de presença gerado com sucesso!", codigo });
+      req.flash("success_msg", "Código de presença gerado com sucesso!");
+      return res.status(200).json({ success: true, codigo });
     } else {
       req.flash("error_msg", "Não é possível gerar código fora do horário da aula.");
-      return res.json({ success: false, message: "Não é possível gerar código fora do horário da aula." });
+      return res.status(400).json({ success: false, message: "Não é possível gerar código fora do horário da aula." });
     }
   } catch (error) {
     console.error("Erro ao gerar código:", error);
     req.flash("error_msg", "Erro ao gerar código.");
-    return res.json({ success: false, message: "Erro ao gerar código." });
+    return res.status(500).json({ success: false, message: "Erro ao gerar código." });
   }
 });
 
