@@ -46,6 +46,7 @@
         if (data.success) {
           codeContainer.innerText = `Código: ${data.codigo}`;
         } else {
+          codeContainer.innerText = `Erro: ${data.message}`; // Exibe a mensagem de erro no container
           console.error("Erro ao gerar código:", data.message);
         }
       })
@@ -53,4 +54,15 @@
         console.error("Erro ao gerar código:", error);
       });
   }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const codeContainers = document.getElementsByClassName("code-container");
+    Array.from(codeContainers).forEach((container) => {
+      const code = container.getAttribute("data-code");
+      if (code) {
+        container.innerText = `Código: ${code}`;
+      }
+    });
+  });
 </script>
+

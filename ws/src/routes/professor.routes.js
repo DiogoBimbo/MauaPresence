@@ -78,30 +78,32 @@ router.post("/login", async (req, res) => {
   try {
     const professor = await Professor.findOne({ email });
     if (!professor) {
-      res.json({ success: false });
-      return;
+      req.flash("error_msg", "Professor não encontrado.");
+      return res.json({ success: false, message: "Professor não encontrado." });
     }
     const senhaCorreta = await bcrypt.compare(senha, professor.senha);
     if (senhaCorreta) {
       const token = jwt.sign({ email: professor.email }, "chave_secreta");
       res.cookie("token", token);
-      res.json({ success: true });
+      return res.json({ success: true, message: "Login realizado com sucesso." });
     } else {
-      res.json({ success: false });
+      req.flash("error_msg", "Senha incorreta.");
+      return res.json({ success: false, message: "Senha incorreta." });
     }
   } catch (error) {
-    console.error("Erro ao fazer login:", error);
-    res.json({ success: false });
+    console.error("Erro ao realizar login:", error);
+    return res.json({ success: false, message: "Ocorreu um erro ao realizar o login." });
   }
 });
+
 
 router.post("/gerar-codigo/:aulaId", async (req, res) => {
   const aulaId = req.params.aulaId;
   try {
     const aula = await Aula.findById(aulaId);
     if (!aula) {
-      res.json({ success: false, message: "Aula não encontrada." });
-      return;
+      req.flash("error_msg", "Aula não encontrada.");
+      return res.json({ success: false, message: "Aula não encontrada." });
     }
     const currentDateTime = getCurrentDateTime();
     const currentHours = Number(currentDateTime.split(' ')[1].split(':')[0]);
@@ -119,18 +121,20 @@ router.post("/gerar-codigo/:aulaId", async (req, res) => {
         codigo: codigo,
       });
       await presenca.save();
-      res.json({ success: true, codigo });
+      return res.json({ success: true, message: "Código de presença gerado com sucesso!", codigo });
     } else {
-      res.json({
-        success: false,
-        message: "Não é possível gerar código fora do horário da aula.",
-      });
+      req.flash("error_msg", "Não é possível gerar código fora do horário da aula.");
+      return res.json({ success: false, message: "Não é possível gerar código fora do horário da aula." });
     }
   } catch (error) {
     console.error("Erro ao gerar código:", error);
-    res.json({ success: false, message: "Erro ao gerar código." });
+    req.flash("error_msg", "Erro ao gerar código.");
+    return res.json({ success: false, message: "Erro ao gerar código." });
   }
 });
+
+
+
 
 function isTimeBetween(time, startTime, endTime) {
   const startHours = startTime.getHours();

@@ -62,6 +62,18 @@
   {{else}}
     <p>Não há aulas disponíveis no momento.</p>
   {{/if}}
+
+  {{#if messages.error}}
+    <div class="alert alert-danger mt-4">
+      {{messages.error}}
+    </div>
+  {{/if}}
+
+  {{#if messages.success}}
+    <div class="alert alert-success mt-4">
+      {{messages.success}}
+    </div>
+  {{/if}}
 {{else}}
   <p>Você não está autenticado. Faça
     <a href="/aluno/login">login</a>
