@@ -200,4 +200,10 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
     res.redirect("/aluno/dashboard");
   }
 });
+
+router.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.redirect("/aluno/login"); 
+});
+
 module.exports = router;

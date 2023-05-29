@@ -1,6 +1,7 @@
 <div class="card">
   <div class="card-body">
     <h5 class="card-title">Suas aulas:</h5>
+    <button class="btn btn-danger" onclick="logout()">Logout</button>
     {{#each aulas}}
     <div class="card mb-3">
       <div class="card-body">
@@ -98,6 +99,22 @@ function generateRandomCode(aulaId) {
       }, 5000); 
     });
   }
+
+  function logout() {
+  fetch("/professor/logout", {
+    method: "GET",
+  })
+    .then((response) => {
+      if (response.redirected) {
+        window.location.href = response.url;
+      }
+    })
+    .catch((error) => {
+      console.error("Erro ao fazer logout:", error);
+      // Exiba uma mensagem de erro ou tome alguma ação apropriada
+    });
+}
+
 
 
 </script>
