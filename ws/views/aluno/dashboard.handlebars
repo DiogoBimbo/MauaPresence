@@ -1,5 +1,7 @@
 {{#if aluno}}
   <h1 class="mb-4">Bem-vindo(a), {{aluno.nome_completo}}!</h1>
+  <button class="btn btn-danger" onclick="logout()">Logout</button>
+
   <h2 class="mt-5">Dados do Aluno:</h2>
   <ul class="list-group mb-4">
     <li class="list-group-item"><strong>Nome Completo:</strong>
@@ -79,3 +81,21 @@
     <a href="/aluno/login">login</a>
     para acessar o dashboard.</p>
 {{/if}}
+
+<script>
+  function logout() {
+    fetch("/aluno/logout", {
+      method: "GET",
+    })
+      .then((response) => {
+        if (response.redirected) {
+          window.location.href = response.url;
+        }
+      })
+      .catch((error) => {
+        console.error("Erro ao fazer logout:", error);
+        // Exiba uma mensagem de erro ou tome alguma ação apropriada
+      });
+  }
+
+</script>

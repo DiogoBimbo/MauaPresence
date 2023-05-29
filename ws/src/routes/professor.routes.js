@@ -135,8 +135,6 @@ router.post("/gerar-codigo/:aulaId", async (req, res) => {
 });
 
 
-
-
 function isTimeBetween(time, startTime, endTime) {
   const startHours = startTime.getHours();
   const startMinutes = startTime.getMinutes();
@@ -154,4 +152,10 @@ function isTimeBetween(time, startTime, endTime) {
   return false;
 }
 
+router.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.redirect("/professor/login");
+});
+
+ 
 module.exports = router;
