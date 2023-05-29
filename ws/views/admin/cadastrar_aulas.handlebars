@@ -1,0 +1,97 @@
+<h3>Nova aula:</h3>
+<div class="card">
+  <div class="card-body">
+    <form action="/admin/aulas/novo" method="POST">
+      <label for="horario_inicio">Horário de início da aula:</label>
+      <input
+        type="text"
+        id="horario_inicio"
+        name="horario_inicio"
+        placeholder="00:00"
+        class="form-control"
+      />
+
+      <label for="horario_fim">Horário de término da aula:</label>
+      <input
+        type="text"
+        id="horario_fim"
+        name="horario_fim"
+        placeholder="00:00"
+        class="form-control"
+      />
+
+      <label for="tipo_aula">Tipo da aula:</label>
+      <select name="tipo_aula" id="tipo_aula" class="form-select">
+        <option value="TEO">Teórica</option>
+        <option value="LAB">Laboratório</option>
+      </select>
+
+      <label for="id_materia">Matéria:</label>
+      <select name="id_materia" class="form-select">
+        {{#each materia}}
+          <option value="{{_id}}">{{nome_materia}}</option>
+        {{else}}
+          <option value="0">Não há nenhuma matéria registrado</option>
+        {{/each}}
+      </select>
+
+      <label for="id_professor">Professor:</label>
+      <select name="id_professor" class="form-select">
+        {{#each professor}}
+          <option value="{{_id}}">{{nome_completo}}</option>
+        {{else}}
+          <option value="0">Não há nenhum professor registrado</option>
+        {{/each}}
+      </select>
+
+      <label for="dia_semana">Dia da semana:</label>
+      <select name="dia_semana", id="dia_semana", class="form-select">
+        <option value="Domingo">Domingo</option>
+        <option value="Segunda-feira">Segunda-feira</option>
+        <option value="Terça-feira">Terça-feira</option>
+        <option value="Quarta-feira">Quarta-feira</option>
+        <option value="Quinta-feira">Quinta-feira</option>
+        <option value="Sexta-feira">Sexta-feira</option>
+        <option value="Sábado">Sábado</option>
+      </select>
+
+      <label for="sala" class="mt-2">Sala:</label>
+      <input
+        type="text"
+        id="sala"
+        name="sala"
+        placeholder="Sala da aula"
+        class="form-control"
+      />
+
+      <label for="grupo">Grupo:</label>
+      <input
+        type="text"
+        id="grupo"
+        name="grupo"
+        placeholder="Grupo"
+        class="form-control"
+      />
+
+      <label for="turma">Turma:</label>
+      <input
+        type="text"
+        id="turma"
+        name="turma"
+        placeholder="Turma"
+        class="form-control"
+      />
+
+      <label for="lab">Laboratório:</label>
+      <input
+        type="text"
+        id="lab"
+        name="lab"
+        placeholder="Laboratório"
+        class="form-control"
+      />
+
+      <button type="submit" class="btn btn-success mt-3">Cadastrar aula</button>
+    </form>
+  </div>
+</div>

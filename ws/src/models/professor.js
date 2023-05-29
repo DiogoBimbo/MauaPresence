@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 const professorSchema = new Schema({
     ra: {
-      type: String,
-      required: true
+        type: String,
+        required: true
     },
     nome_completo: {
         type: String,

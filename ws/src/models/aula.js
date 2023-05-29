@@ -10,6 +10,10 @@ const aulaSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    tipo_aula: {
+        type: String,
+        enum: ['TEO', 'LAB']
+    },
     id_materia: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Materia',
@@ -21,18 +25,25 @@ const aulaSchema = new mongoose.Schema({
         required: true
     },
     dia_semana: {
-        type: Number,
+        type: String,
         required: true,
-        min: 1,
-        max: 7
+        enum: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado']
     },
     sala: {
         type: String,
         required: true
     },
-    gtl: {
+    grupo: {
         type: String,
-        required: true
+        required: false
+    },
+    turma: {
+        type: String,
+        required: false
+    },
+    lab: {
+        type: String,
+        required: false
     }
 });
 

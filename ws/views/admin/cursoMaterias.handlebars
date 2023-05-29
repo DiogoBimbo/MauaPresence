@@ -1,0 +1,25 @@
+<h2>Cadastro de matérias nos seus respectivos cursos</h2>
+<hr />
+<a href="/admin/cursoMaterias/cadastrar"><button
+    type="button"
+    class="btn btn-success"
+  >Adicionar matérias á um curso</button></a>
+
+{{#each cursoMaterias}}
+    <div class="card my-3">
+        <div class="card-body">
+            <h5>{{id_curso.cod_curso}}: {{id_curso.nome_curso}}</h5>
+            <hr />
+            <h5>Matérias: </h5>
+            {{#each id_materia}}
+              <p>{{cod_materia}}: {{nome_materia}}</p>
+            {{/each}}
+        </div>
+    </div>
+{{else}}
+ <div class="card my-3">
+        <div class="card-body">         
+          <p class="card-title text-center">Nenhuma curso-matéria registrado</p>
+        </div>
+    </div>
+{{/each}}

@@ -1,0 +1,103 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Suas aulas:</h5>
+    {{#each aulas}}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">
+          Horário: {{ horario_inicio }} - {{ horario_fim }}
+        </h6>
+        <p class="card-text">Tipo: {{ tipo_aula }}</p>
+        <p class="card-text">Matéria: {{ id_materia.nome_materia }}</p>
+        <p class="card-text">Dia da semana: {{ dia_semana }}</p>
+        <p class="card-text">Sala: {{ sala }}</p>
+        <p class="card-text">Grupo: {{ grupo }}</p>
+        <p class="card-text">Turma: {{ turma }}</p>
+        <p class="card-text">Lab: {{ lab }}</p>
+        <button class="btn btn-primary" onclick="generateQRCode('{{ _id }}')">Gerar QR Code</button>
+        <button class="btn btn-secondary" onclick="generateRandomCode('{{ _id }}')">Gerar Código</button>
+        <div class="code-container" id="code-container-{{ _id }}">
+          {{#if messages.success}}
+            <div class="alert alert-success mt-2">
+              {{messages.success}}
+            </div>
+          {{else}}
+            {{#if messages.error}}
+              <div class="alert alert-danger mt-2">
+                {{messages.error}}
+              </div>
+            {{else}}
+              {{#if codigoPresenca}}
+                Código: {{ codigoPresenca }}
+              {{else}}
+                <span id="error-container-{{ _id }}" class="text-danger"></span>
+              {{/if}}
+            {{/if}}
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const flashMessages = document.querySelectorAll(".flash-message");
+    if (flashMessages) {
+      flashMessages.forEach((message) => {
+        message.style.display = "block";
+        setTimeout(() => {
+          message.style.display = "none";
+        }, 5000); 
+      });
+    }
+  });
+
+function generateRandomCode(aulaId) {
+  const codeContainer = document.getElementById(`code-container-${aulaId}`);
+  const errorContainer = document.getElementById(`error-container-${aulaId}`);
+
+  if (codeContainer.innerText.trim() !== "") {
+    return;
+  }
+
+  fetch(`/professor/gerar-codigo/${aulaId}`, {
+    method: "POST",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        codeContainer.innerHTML = `
+          <div class="alert alert-success mt-2 flash-message">
+            Código de presença gerado com sucesso!
+          </div>
+          Código: ${data.codigo}
+        `;
+        errorContainer.innerText = "";
+        setTimeout(() => {
+          codeContainer.innerHTML = `Código: ${data.codigo}`;
+        }, 5000);
+      } else {
+        codeContainer.innerHTML = `
+          <div class="alert alert-danger mt-2 flash-message">
+            ${data.message}
+          </div>
+        `;
+        errorContainer.innerText = data.message; 
+        setTimeout(() => {
+          codeContainer.innerHTML = "";
+        }, 5000); 
+      }
+    })
+    .catch((error) => {
+      console.error("Erro ao gerar código:", error);
+      errorContainer.innerText = "Erro ao gerar código."; 
+      setTimeout(() => {
+        codeContainer.innerHTML = "";
+      }, 5000); 
+    });
+  }
+
+
+</script>

@@ -1,0 +1,89 @@
+<h3>Novo Aluno:</h3>
+<div class="card">
+  <div class="card-body">
+    <form action="/admin/alunos/novo" method="POST">
+      <label for="ra">RA:</label>
+      <input
+        type="text"
+        id="ra"
+        name="ra"
+        placeholder="RA do aluno"
+        class="form-control"
+      />
+
+      <label for="nome_completo" class="mt-2">Nome completo:</label>
+      <input
+        type="text"
+        id="nome_completo"
+        name="nome_completo"
+        placeholder="Nome do aluno"
+        class="form-control"
+      />
+
+      <label for="semestre">Semestre:</label>
+      <input
+        type="text"
+        id="semestre"
+        name="semestre"
+        placeholder="Semestre do aluno"
+        class="form-control"
+      />
+
+      <label for="grupo">grupo:</label>
+      <input
+        type="text"
+        id="grupo"
+        name="grupo"
+        placeholder="Grupo do aluno"
+        class="form-control"
+      />
+
+      <label for="turma">Turma:</label>
+      <input
+        type="text"
+        id="turma"
+        name="turma"
+        placeholder="Turma do aluno"
+        class="form-control"
+      />
+
+      <label for="lab">Laboratório:</label>
+      <input
+        type="text"
+        id="lab"
+        name="lab"
+        placeholder="Laboratório do aluno"
+        class="form-control"
+      />
+
+      <label for="email" class="mt-2">Email:</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Email do aluno"
+        class="form-control"
+      />
+
+      <label for="senha" class="mt-2">Senha:</label>
+      <input
+        type="password"
+        id="senha"
+        name="senha"
+        placeholder="Senha do aluno"
+        class="form-control"
+      />
+
+      <label for="id_curso">Curso:</label>
+      <select name="id_curso" class="form-select">
+        {{#each curso}}
+          <option value="{{_id}}">{{nome_curso}}</option>
+        {{else}}
+          <option value="0">Não há nenhum curso registrado</option>
+        {{/each}}
+      </select>
+
+      <button type="submit" class="btn btn-success mt-3">Cadastrar aluno</button>
+    </form>
+  </div>
+</div>
