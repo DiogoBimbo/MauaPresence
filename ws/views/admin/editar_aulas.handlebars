@@ -1,7 +1,8 @@
-<h3>Nova aula:</h3>
+<h3>Editar aula:</h3>
 <div class="card">
   <div class="card-body">
-    <form action="/admin/aulas/novo" method="POST">
+    <form action="/admin/aulas/editar" method="POST">
+    <input type="hidden" name="id" value="{{aula._id}}">
       <label for="horario_inicio">Horário de início da aula:</label>
       <input
         type="text"
@@ -9,6 +10,7 @@
         name="horario_inicio"
         placeholder="00:00"
         class="form-control"
+        value="{{aula.horario_inicio}}"
       />
 
       <label for="horario_fim">Horário de término da aula:</label>
@@ -18,16 +20,19 @@
         name="horario_fim"
         placeholder="00:00"
         class="form-control"
+        value="{{aula.horario_fim}}"
       />
 
       <label for="tipo_aula">Tipo da aula:</label>
       <select name="tipo_aula" id="tipo_aula" class="form-select">
+        <option class="text-primary">{{aula.tipo_aula}}</option>
         <option value="TEO">TEO(Teórica)</option>
         <option value="LAB">LAB(Laboratório)</option>
       </select>
 
       <label for="id_materia">Matéria:</label>
       <select name="id_materia" class="form-select">
+        <option class="text-primary" value="{{aula.id_materia._id}}">{{aula.id_materia.nome_materia}}</option>
         {{#each materia}}
           <option value="{{_id}}">{{nome_materia}}</option>
         {{else}}
@@ -37,6 +42,7 @@
 
       <label for="id_professor">Professor:</label>
       <select name="id_professor" class="form-select">
+        <option class="text-primary" value="{{aula.id_professor._id}}">{{aula.id_professor.nome_completo}}</option>
         {{#each professor}}
           <option value="{{_id}}">{{nome_completo}}</option>
         {{else}}
@@ -46,6 +52,7 @@
 
       <label for="dia_semana">Dia da semana:</label>
       <select name="dia_semana", id="dia_semana", class="form-select">
+        <option class="text-primary">{{aula.dia_semana}}</option>
         <option value="Domingo">Domingo</option>
         <option value="Segunda-feira">Segunda-feira</option>
         <option value="Terça-feira">Terça-feira</option>
@@ -62,6 +69,7 @@
         name="sala"
         placeholder="Sala da aula"
         class="form-control"
+        value="{{aula.sala}}"
       />
 
       <label for="grupo">Grupo:</label>
@@ -71,6 +79,7 @@
         name="grupo"
         placeholder="Grupo"
         class="form-control"
+        value="{{aula.grupo}}"
       />
 
       <label for="turma">Turma:</label>
@@ -80,6 +89,7 @@
         name="turma"
         placeholder="Turma"
         class="form-control"
+        value="{{aula.turma}}"
       />
 
       <label for="lab">Laboratório:</label>
@@ -89,9 +99,10 @@
         name="lab"
         placeholder="Laboratório"
         class="form-control"
+        value="{{aula.lab}}"
       />
 
-      <button type="submit" class="btn btn-success mt-3">Cadastrar aula</button>
+      <button type="submit" class="btn btn-success mt-3">Editar aula</button>
     </form>
   </div>
 </div>

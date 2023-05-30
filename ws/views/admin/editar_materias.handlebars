@@ -1,0 +1,13 @@
+<h3>Editar Matéria:</h3>
+<div class="card">
+    <div class="card-body">
+        <form action="/admin/materias/editar" method="POST">
+            <input type="hidden" name="id" value="{{materia._id}}">
+            <label for="cod_materia">Código:</label>
+            <input type="text" id="cod_materia" name="cod_materia" placeholder="Código da matéria" class="form-control" value="{{materia.cod_materia}}"> 
+            <label for="nome" class="mt-2">Nome:</label>
+            <input type="text" id="nome_materia" name="nome" placeholder="Nome da matéria" class="form-control" value="{{materia.nome_materia}}">
+            <button type="submit" class="btn btn-success mt-3">Editar matéria</button>
+        </form>
+    </div>
+</div>

@@ -7,6 +7,8 @@
         <div class="card-body">
             <h5>{{nome_materia}}</h5>
             <p>Código da matéria: {{cod_materia}}</p>
+            <a href="/admin/materias/editar/{{_id}}"><button class="btn btn-success">Editar Matéria</button></a>
+            <a href="/admin/materias/deletar/{{_id}}"><button class="btn btn-danger">Deletar Matéria</button></a>
         </div>
     </div>
 {{else}}
