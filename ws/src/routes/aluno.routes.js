@@ -46,21 +46,14 @@ router.get("/dashboard", async (req, res) => {
     const alunoMateria = await AlunoMateria.findOne({
       id_aluno: aluno._id,
     }).lean();
-    if (!alunoMateria) {
-      res.render("aluno/dashboard", {
-        aluno: {
-          nome_completo: aluno.nome_completo,
-          email: aluno.email,
-          ra: aluno.ra,
-          grupo: aluno.grupo,
-          turma: aluno.turma,
-          lab: aluno.lab,
-        },
-        aulas: [],
-      });
-      return;
-    }
-    const idMaterias = alunoMateria.id_materia;
+    const filter = {}; // Objeto de filtro para as aulas
+    if (aluno.grupo && aluno.turma && aluno.lab) {
+      filter.$or = [
+        { grupo: aluno.grupo, turma: aluno.turma, lab: aluno.lab },
+        { grupo: aluno.grupo, turma: aluno.turma },
+        { grupo: aluno.grupo },
+      ];
+    } 
     const diasSemana = [
       "Domingo",
       "Segunda-feira",
@@ -72,8 +65,9 @@ router.get("/dashboard", async (req, res) => {
     ];
     const hoje = getCurrentDate().getUTCDay();
     const diaAtual = diasSemana[hoje];
+
     const aulas = await Aula.find({
-      id_materia: { $in: idMaterias },
+      ...filter,
       dia_semana: diaAtual,
     })
       .populate("id_materia")
@@ -159,7 +153,7 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
       return;
     }
 
-    const currentDateTime = getCurrentDate();
+    const currentDateTime = new Date();
     const currentHours = Number(
       currentDateTime.toISOString().split("T")[1].split(":")[0]
     );
@@ -173,17 +167,22 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
     const endTime = parseTime(aula.horario_fim);
 
     if (isTimeBetween(currentTime, startTime, endTime)) {
-      // Verificar se o aluno já marcou presença
-      if (presenca.id_aluno.includes(aluno._id)) {
+      const alunoPresenca = presenca.alunos.find(
+        (alunoPresenca) =>
+          alunoPresenca.id_aluno.toString() === aluno._id.toString()
+      );
+      if (alunoPresenca) {
         req.flash("error_msg", "Presença já marcada");
         res.redirect("/aluno/dashboard");
         return;
       }
 
-      presenca.id_aluno.push(aluno._id);
+      presenca.alunos.push({
+        id_aluno: aluno._id,
+        status: "presente",
+      });
 
-      presenca.status = "presente";
-      await presenca.save();
+      presenca.save();
 
       req.flash("success_msg", "Presença marcada com sucesso");
       res.redirect("/aluno/dashboard");
@@ -203,7 +202,7 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
 
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
-  res.redirect("/aluno/login"); 
+  res.redirect("/aluno/login");
 });
 
 module.exports = router;
