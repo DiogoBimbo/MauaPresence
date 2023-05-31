@@ -43,17 +43,31 @@ router.get("/dashboard", async (req, res) => {
       res.redirect("/aluno/login");
       return;
     }
+
     const alunoMateria = await AlunoMateria.findOne({
       id_aluno: aluno._id,
     }).lean();
-    const filter = {}; // Objeto de filtro para as aulas
-    if (aluno.grupo && aluno.turma && aluno.lab) {
-      filter.$or = [
-        { grupo: aluno.grupo, turma: aluno.turma, lab: aluno.lab },
-        { grupo: aluno.grupo, turma: aluno.turma },
-        { grupo: aluno.grupo },
-      ];
-    } 
+
+    const filter = {
+      $or: [
+        {
+          enum_aula: "Padrão",
+          grupo: aluno.grupo,
+          turma: aluno.turma,
+          lab: aluno.lab,
+        },
+        {
+          enum_aula: "Padrão",
+          grupo: aluno.grupo,
+          turma: aluno.turma
+        },
+        {
+          enum_aula: "Padrão",
+          grupo: aluno.grupo
+        },
+        { enum_aula: "Pae" }
+      ],
+    };
     const diasSemana = [
       "Domingo",
       "Segunda-feira",
@@ -72,6 +86,7 @@ router.get("/dashboard", async (req, res) => {
     })
       .populate("id_materia")
       .lean();
+
     res.render("aluno/dashboard", {
       aluno: {
         nome_completo: aluno.nome_completo,

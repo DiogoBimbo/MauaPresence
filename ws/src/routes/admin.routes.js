@@ -1153,6 +1153,7 @@ router.post("/aulas/novo", async (req, res) => {
     horario_inicio: req.body.horario_inicio,
     horario_fim: req.body.horario_fim,
     tipo_aula: req.body.tipo_aula,
+    enum_aula: req.body.enum_aula,
     id_materia: req.body.id_materia,
     id_professor: req.body.id_professor,
     dia_semana: req.body.dia_semana,
@@ -1178,6 +1179,11 @@ router.post("/aulas/novo", async (req, res) => {
       "any.required": "O campo tipo de aula é obrigatório",
       "string.empty": "Por favor, selecione um tipo de aula",
       "any.only": "O tipo de aula deve ser TEO ou LAB",
+    }),
+    enum_aula: Joi.string().valid("Padrão", "Pae").required().messages({
+      "any.required": "O campo categoria da aula é obrigatório",
+      "string.empty": "Por favor, selecione uma categoria de aula",
+      "any.only": "A categoria da aula deve ser Padrão ou Pae",
     }),
     id_materia: Joi.string().required().messages({
       "any.required": "O campo matéria é obrigatório",
@@ -1258,6 +1264,7 @@ router.post("/aulas/editar", async (req, res) => {
     horario_inicio: req.body.horario_inicio,
     horario_fim: req.body.horario_fim,
     tipo_aula: req.body.tipo_aula,
+    enum_aula: req.body.enum_aula,
     id_materia: req.body.id_materia,
     id_professor: req.body.id_professor,
     dia_semana: req.body.dia_semana,
@@ -1284,6 +1291,11 @@ router.post("/aulas/editar", async (req, res) => {
         "any.required": "O campo tipo de aula é obrigatório",
         "string.empty": "Por favor, selecione um tipo de aula",
         "any.only": "O tipo de aula deve ser TEO ou LAB",
+      }),
+      enum_aula: Joi.string().valid("Padrão", "Pae").required().messages({
+        "any.required": "O campo categoria da aula é obrigatório",
+        "string.empty": "Por favor, selecione uma categoria de aula",
+        "any.only": "A categoria da aula deve ser Padrão ou Pae",
       }),
       id_materia: Joi.string().required().messages({
         "any.required": "O campo matéria é obrigatório",
@@ -1328,6 +1340,7 @@ router.post("/aulas/editar", async (req, res) => {
     aula.horario_inicio = edicaoAula.horario_inicio;
     aula.horario_fim = edicaoAula.horario_fim;
     aula.tipo_aula = edicaoAula.tipo_aula;
+    aula.enum_aula = edicaoAula.enum_aula;
     aula.id_materia = edicaoAula.id_materia;
     aula.id_professor = edicaoAula.id_professor;
     aula.dia_semana = edicaoAula.dia_semana;
