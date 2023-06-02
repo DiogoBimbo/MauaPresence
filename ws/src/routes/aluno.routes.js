@@ -43,29 +43,30 @@ router.get("/dashboard", async (req, res) => {
       res.redirect("/aluno/login");
       return;
     }
-
     const alunoMateria = await AlunoMateria.findOne({
       id_aluno: aluno._id,
     }).lean();
-
     const filter = {
       $or: [
         {
           enum_aula: "Padrão",
+          id_materia: { $in: alunoMateria.id_materia },
           grupo: aluno.grupo,
           turma: aluno.turma,
           lab: aluno.lab,
         },
         {
           enum_aula: "Padrão",
+          id_materia: { $in: alunoMateria.id_materia },
           grupo: aluno.grupo,
-          turma: aluno.turma
+          turma: aluno.turma,
         },
         {
           enum_aula: "Padrão",
-          grupo: aluno.grupo
+          id_materia: { $in: alunoMateria.id_materia },
+          grupo: aluno.grupo,
         },
-        { enum_aula: "Pae" }
+        { enum_aula: "Pae" },
       ],
     };
     const diasSemana = [
@@ -79,14 +80,12 @@ router.get("/dashboard", async (req, res) => {
     ];
     const hoje = getCurrentDate().getUTCDay();
     const diaAtual = diasSemana[hoje];
-
     const aulas = await Aula.find({
       ...filter,
       dia_semana: diaAtual,
     })
       .populate("id_materia")
       .lean();
-
     res.render("aluno/dashboard", {
       aluno: {
         nome_completo: aluno.nome_completo,
@@ -156,12 +155,12 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
     const presenca = await Presenca.findOne({
       id_aula: aula._id,
     });
-
     if (!presenca) {
       req.flash("error_msg", "Presença não encontrada");
       res.redirect("/aluno/dashboard");
       return;
     }
+
     if (presenca.codigo !== codigo) {
       req.flash("error_msg", "Código inválido");
       res.redirect("/aluno/dashboard");
@@ -186,21 +185,17 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
         (alunoPresenca) =>
           alunoPresenca.id_aluno.toString() === aluno._id.toString()
       );
+
       if (alunoPresenca) {
-        req.flash("error_msg", "Presença já marcada");
+        alunoPresenca.status = "presente";
+        await presenca.save();
+        req.flash("success_msg", "Presença marcada com sucesso");
+        res.redirect("/aluno/dashboard");
+      } else {
+        req.flash("error_msg", "Aluno não encontrado na presença");
         res.redirect("/aluno/dashboard");
         return;
       }
-
-      presenca.alunos.push({
-        id_aluno: aluno._id,
-        status: "presente",
-      });
-
-      presenca.save();
-
-      req.flash("success_msg", "Presença marcada com sucesso");
-      res.redirect("/aluno/dashboard");
     } else {
       req.flash(
         "error_msg",
@@ -213,11 +208,6 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
     req.flash("error_msg", "Erro ao marcar presença");
     res.redirect("/aluno/dashboard");
   }
-});
-
-router.get("/logout", (req, res) => {
-  res.clearCookie("token");
-  res.redirect("/aluno/login");
 });
 
 module.exports = router;

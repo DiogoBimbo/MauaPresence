@@ -5,6 +5,9 @@ const router = express.Router();
 const Aula = require("../models/aula");
 const Professor = require("../models/professor");
 const Presenca = require("../models/presenca");
+const Aluno = require("../models/aluno");
+const AlunoMateria = require("../models/alunoMateria");
+
 
 function generateRandomCode() {
   const length = 5;
@@ -20,17 +23,17 @@ function generateRandomCode() {
 function getCurrentDateTime() {
   const currentDate = new Date();
   const year = currentDate.getFullYear();
-  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-  const day = String(currentDate.getDate()).padStart(2, '0');
-  const hours = String(currentDate.getHours()).padStart(2, '0');
-  const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-  const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+  const day = String(currentDate.getDate()).padStart(2, "0");
+  const hours = String(currentDate.getHours()).padStart(2, "0");
+  const minutes = String(currentDate.getMinutes()).padStart(2, "0");
+  const seconds = String(currentDate.getSeconds()).padStart(2, "0");
   const currentDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   return currentDateTime;
 }
 
 function parseTime(time) {
-  const [hours, minutes] = time.split(':');
+  const [hours, minutes] = time.split(":");
   const parsedTime = new Date();
   parsedTime.setHours(Number(hours));
   parsedTime.setMinutes(Number(minutes));
@@ -85,17 +88,22 @@ router.post("/login", async (req, res) => {
     if (senhaCorreta) {
       const token = jwt.sign({ email: professor.email }, "chave_secreta");
       res.cookie("token", token);
-      return res.json({ success: true, message: "Login realizado com sucesso." });
+      return res.json({
+        success: true,
+        message: "Login realizado com sucesso.",
+      });
     } else {
       req.flash("error_msg", "Senha incorreta.");
       return res.json({ success: false, message: "Senha incorreta." });
     }
   } catch (error) {
     console.error("Erro ao realizar login:", error);
-    return res.json({ success: false, message: "Ocorreu um erro ao realizar o login." });
+    return res.json({
+      success: false,
+      message: "Ocorreu um erro ao realizar o login.",
+    });
   }
 });
-
 
 router.post("/gerar-codigo/:aulaId", async (req, res) => {
   const aulaId = req.params.aulaId;
@@ -103,11 +111,13 @@ router.post("/gerar-codigo/:aulaId", async (req, res) => {
     const aula = await Aula.findById(aulaId);
     if (!aula) {
       req.flash("error_msg", "Aula não encontrada.");
-      return res.status(404).json({ success: false, message: "Aula não encontrada." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Aula não encontrada." });
     }
     const currentDateTime = getCurrentDateTime();
-    const currentHours = Number(currentDateTime.split(' ')[1].split(':')[0]);
-    const currentMinutes = Number(currentDateTime.split(' ')[1].split(':')[1]);
+    const currentHours = Number(currentDateTime.split(" ")[1].split(":")[0]);
+    const currentMinutes = Number(currentDateTime.split(" ")[1].split(":")[1]);
     const currentTime = new Date();
     currentTime.setHours(currentHours);
     currentTime.setMinutes(currentMinutes);
@@ -115,25 +125,43 @@ router.post("/gerar-codigo/:aulaId", async (req, res) => {
     const endTime = parseTime(aula.horario_fim);
     if (isTimeBetween(currentTime, startTime, endTime)) {
       const codigo = generateRandomCode();
+
+      const alunosMateria = await AlunoMateria.find({
+        id_materia: aula.id_materia,
+      }).populate("id_aluno");
+      const alunos = alunosMateria.map((alunoMateria) => alunoMateria.id_aluno);
+
       const presenca = new Presenca({
         id_aula: aulaId,
         data: new Date(currentDateTime),
         codigo: codigo,
-      }); 
+        alunos: alunos.map((aluno) => ({
+          id_aluno: aluno._id,
+          status: "faltou",
+        })),
+      });
+
       await presenca.save();
       req.flash("success_msg", "Código de presença gerado com sucesso!");
       return res.status(200).json({ success: true, codigo });
     } else {
-      req.flash("error_msg", "Não é possível gerar código fora do horário da aula.");
-      return res.status(400).json({ success: false, message: "Não é possível gerar código fora do horário da aula." });
+      req.flash(
+        "error_msg",
+        "Não é possível gerar código fora do horário da aula."
+      );
+      return res.status(400).json({
+        success: false,
+        message: "Não é possível gerar código fora do horário da aula.",
+      });
     }
   } catch (error) {
     console.error("Erro ao gerar código:", error);
     req.flash("error_msg", "Erro ao gerar código.");
-    return res.status(500).json({ success: false, message: "Erro ao gerar código." });
+    return res
+      .status(500)
+      .json({ success: false, message: "Erro ao gerar código." });
   }
 });
-
 
 function isTimeBetween(time, startTime, endTime) {
   const startHours = startTime.getHours();
@@ -157,5 +185,4 @@ router.get("/logout", (req, res) => {
   res.redirect("/professor/login");
 });
 
- 
 module.exports = router;
