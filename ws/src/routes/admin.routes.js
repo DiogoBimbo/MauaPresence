@@ -15,6 +15,7 @@ const Aluno = require("../models/aluno");
 const AlunoMateria = require("../models/alunoMateria");
 const Professor = require("../models/professor");
 const Aula = require("../models/aula");
+const Presenca = require("../models/presenca");
 
 // rota principal ADM
 router.get("/", async (req, res) => {
@@ -549,12 +550,18 @@ router.get("/cursoMaterias/deletar/:id", async (req, res) => {
 
 // rota que faz a listagem dos Alunos
 router.get("/alunos", async (req, res) => {
-  Aluno.find().populate("id_curso").lean().then((alunos) => {
-    res.render("admin/alunos", {alunos:alunos});
-  }).catch((err) => {
-    req.flash("error_msg","Houve um errro ao listar os alunos");
-    res.redirect("/admin");
-  });
+  try {
+    const cursosP = Curso.find().lean().exec();
+    const alunosP = Aluno.find().populate('id_curso').lean().exec();
+    const [curso, alunos] = await Promise.all([cursosP, alunosP]);
+    res.render('admin/alunos', {
+      curso: curso,
+      alunos: alunos,
+    });
+  } catch (err) {
+    req.flash('error_msg', 'Houve um erro ao carregar os cursos e alunos');
+    res.redirect('/admin');
+  }
 });
 
 // rota do formulário para cadastro
@@ -1370,32 +1377,19 @@ router.get("/aulas/deletar/:id", async (req, res) => {
   });
 });
 
-// const wifiName = require("wifi-name");
+// rota que faz a listagem das Presenças
+router.get("/presencas", async (req, res) => {
+  Presenca.find().populate("id_aula").populate("alunos.id_aluno").populate({ path: "id_aula", populate: { path: "id_materia" } }).populate({ path: "id_aula", populate: { path: "id_professor" } }).populate({ path: "alunos.id_aluno", populate: { path: "id_curso" } }).lean().then((presencas) => {
+    res.render("admin/presencas", {presencas:presencas});
+  }).catch((err) => {
+    req.flash("error_msg","Houve um errro ao listar as presenças");
+    console.error(err);
+    res.redirect("/admin");
+  });
+});
 
-// function obterNomeRedeWifi() {
-//   return new Promise((resolve, reject) => {
-//     wifiName().then(nomeRede => {
-//       resolve(nomeRede);
-//     }).catch(err => {
-//       reject(err);
-//     });
-//   });
-// }
-
-// router.get('/wifi', async (req, res) => {
-//   try {
-//     const nomeRede = await obterNomeRedeWifi();
-//     if(nomeRede == 'IDGS 5G') {
-
-//       res.send('Nome da rede Wi-Fi: ' + nomeRede);
-//     }
-//     else {
-//       res.send('A rede conectada não é a IDGS 5G');
-//     }
-//   } catch (err) {
-//     console.error('Erro ao obter o nome da rede Wi-Fi:', err);
-//     res.status(500).send('Erro ao obter o nome da rede Wi-Fi');
-//   }
-// });
+// rota de edição da Presença
+router.get("/presencas/editar/:id", async (req, res) =>{
+});
 
 module.exports = router;
