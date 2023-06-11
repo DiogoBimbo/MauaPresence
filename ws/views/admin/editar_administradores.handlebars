@@ -1,0 +1,11 @@
+<h3>Editar Administrador:</h3>
+<div class="card">
+    <div class="card-body">
+        <form action="/admin/administradores/editar" method="POST">
+        <input type="hidden" name="id" value="{{administrador._id}}">
+            <label for="email" class="mt-2">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Email do administrador" class="form-control" value="{{administrador.email}}">
+            <button type="submit" class="btn btn-success mt-3">Editar administrador</button>
+        </form>
+    </div>
+</div>

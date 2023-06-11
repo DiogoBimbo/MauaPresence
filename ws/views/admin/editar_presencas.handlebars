@@ -1,0 +1,31 @@
+<h3>Editar Lista de Presença:</h3>
+<div class="card">
+  <div class="card-body">
+    <form action="/admin/presencas/editar" method="POST">
+      <input type="hidden" name="id" value="{{presenca._id}}">
+      <h5>{{presenca.id_aula.id_materia.nome_materia}} | 
+        {{presenca.id_aula.tipo_aula}} | 
+        Sala: {{presenca.id_aula.sala}} | 
+        {{#if presenca.id_aula.grupo}}
+        Grupo: {{presenca.id_aula.grupo}} / 
+        {{/if}} 
+        {{#if presenca.id_aula.turma}} Turma: {{presenca.id_aula.turma}} / 
+        {{/if}} 
+        {{#if presenca.id_aula.lab}} Laboratório: {{presenca.id_aula.lab}} 
+        {{/if}} | 
+        Horário: {{presenca.id_aula.horario_inicio}} - {{presenca.id_aula.horario_fim}} | 
+        {{presenca.id_aula.dia_semana}} | 
+        Professor: {{presenca.id_aula.id_professor.nome_completo}}</h5>
+      <hr />
+      {{#each presenca.alunos}}
+        <p>RA: {{id_aluno.ra}} / Nome: {{id_aluno.nome_completo}} / Curso: {{id_aluno.id_curso.nome_curso}}</p>
+        <select name="status[{{id_aluno._id}}]" id="status" class="form-select">
+          <option class="text-primary" value="{{status}}">{{status}}</option>
+          <option value="presente">presente</option>
+          <option value="faltou">faltou</option>
+        </select>
+      {{/each}}
+      <button type="submit" class="btn btn-success mt-3">Editar Lista de Presença</button>
+    </form>
+  </div>
+</div>
