@@ -1,31 +1,16 @@
 <h3>Redefinir senha:</h3>
 <div class="card">
   <div class="card-body">
-    <form id="redefinirSenhaForm">
-      <label for="novaSenha" class="mt-2">Nova senha:</label>
-      <input
-        type="password"
-        id="novaSenha"
-        name="novaSenha"
-        placeholder="Nova senha do aluno"
-        class="form-control"
-      />
-    </form>
+    <input type="password" id="novaSenha" name="novaSenha" placeholder="Nova senha do aluno" class="form-control" />
   </div>
 </div>
 <button id="redefinirSenhaButton" class="btn btn-success mt-3">Redefinir senha</button>
 
 <script>
   document.getElementById("redefinirSenhaButton").addEventListener("click", function() {
-    const url = window.location.href;
-    const urlPath = new URL(url).pathname;
-    const divisaoUrl = urlPath.split('/');
-    const resetToken = divisaoUrl[divisaoUrl.length - 1];
-
-    console.log(resetToken); // Exibe o token no console
-
-
+    const resetToken = window.location.pathname.split('/').pop();
     const novaSenha = document.getElementById("novaSenha").value;
+
     fetch(`/aluno/redefinir-senha/${resetToken}`, {
       method: "POST",
       headers: {
@@ -36,7 +21,6 @@
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        // Redirecionar para a tela de login
         window.location.href = "/aluno/login";
       } else {
         alert("Erro ao redefinir a senha. Tente novamente mais tarde.");

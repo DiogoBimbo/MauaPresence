@@ -10,7 +10,6 @@
         placeholder="Email do aluno"
         class="form-control"
       />
-
       <label for="senha" class="mt-2">Senha:</label>
       <input
         type="password"
@@ -19,12 +18,10 @@
         placeholder="Senha do aluno"
         class="form-control"
       />
-
       <button type="submit" class="btn btn-success mt-3">Realizar login</button>
       <button class="btn btn-danger mt-3" data-bs-toggle="modal" data-bs-target="#redefinirSenhaModal" id="esqueciSenhaButton">
         Esqueci minha senha
       </button>
-
     </form>
   </div>
 </div>
@@ -40,7 +37,6 @@
         <form id="redefinirSenhaForm">
           <label for="email" class="mt-2">Email:</label>
           <input type="email" id="redefinirEmail" name="email" placeholder="Seu email" class="form-control" />
-
           <button type="submit" class="btn btn-primary mt-3">Redefinir Senha</button>
         </form>
       </div>
@@ -48,16 +44,14 @@
   </div>
 </div>
 
-<!-- Adicione o link para o script do Bootstrap e jQuery, se necessário -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 
 <script>
   document.getElementById("loginForm").addEventListener("submit", function(event) {
     event.preventDefault();
-
     const email = document.getElementById("email").value;
     const senha = document.getElementById("senha").value;
-
-    // Realizar a requisição de login com os dados fornecidos
     fetch("/aluno/login", {
       method: "POST",
       headers: {
@@ -67,32 +61,24 @@
     })
     .then(response => response.json())
     .then(data => {
-      // Verificar a resposta do servidor
       if (data.success) {
-        // Redirecionar para a página de dashboard
         window.location.href = "/aluno/dashboard";
       } else {
-        // Exibir mensagem de erro de login
         alert("Login inválido. Verifique suas credenciais.");
       }
     })
     .catch(error => {
       console.error("Erro ao realizar login:", error);
-      // Exibir mensagem de erro genérico
       alert("Ocorreu um erro ao realizar o login. Tente novamente mais tarde.");
     });
   });
 
-  // Adicionar evento ao botão "Esqueci minha senha"
   document.getElementById("esqueciSenhaButton").addEventListener("click", function(event) {
-    event.preventDefault(); // Impedir o envio do formulário de login
-
-    document.getElementById("redefinirSenhaForm").addEventListener("submit", function(event) {
+    event.preventDefault(); 
+    const redefinirSenhaForm = document.getElementById("redefinirSenhaForm");
+    function handleRedefinirSenhaFormSubmit(event) {
       event.preventDefault();
-
       const redefinirEmail = document.getElementById("redefinirEmail").value;
-
-      // Realizar a requisição de redefinição de senha com o email fornecido
       fetch("/aluno/redefinir-senha", {
         method: "POST",
         headers: {
@@ -102,11 +88,10 @@
       })
       .then(response => response.json())
       .then(data => {
-        // Verificar a resposta do servidor
         if (data.success) {
           alert("Um email com as instruções para redefinir sua senha foi enviado.");
-          // Fechar o modal de redefinição de senha
-          document.getElementById("redefinirSenhaModal").modal("hide");
+          $('#redefinirSenhaModal').modal('hide');
+          window.location.href = "/aluno/login";
         } else {
           alert("Ocorreu um erro ao processar sua solicitação de redefinição de senha. Tente novamente mais tarde.");
         }
@@ -115,6 +100,8 @@
         console.error("Erro ao processar a solicitação de redefinição de senha:", error);
         alert("Ocorreu um erro ao processar sua solicitação de redefinição de senha. Tente novamente mais tarde.");
       });
-    });
+    }
+    redefinirSenhaForm.addEventListener("submit", handleRedefinirSenhaFormSubmit);
   });
+
 </script>
