@@ -12,15 +12,17 @@ const presencaSchema = new mongoose.Schema({
     ref: 'Aula',
     required: true,
   },
-  id_aluno: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Aluno',
-    required: true,
-  }],
-  status: [{
-    type: String,
-    enum: ['presente', 'faltou'],
-    default: 'faltou',
+  alunos: [{
+    id_aluno: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Aluno',
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ['presente', 'faltou'],
+      default: 'faltou',
+    },
   }],
   codigo: {
     type: String,

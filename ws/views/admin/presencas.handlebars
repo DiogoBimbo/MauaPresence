@@ -1,0 +1,33 @@
+<h2>Listas de presenças</h2>
+<hr />
+{{#each presencas}}
+    <div class="card my-3">
+        <div class="card-body">
+            <h5>{{id_aula.id_materia.nome_materia}} | 
+                {{id_aula.tipo_aula}} | 
+                Sala: {{id_aula.sala}} | 
+                {{#if id_aula.grupo}}
+                Grupo: {{id_aula.grupo}} / 
+                {{/if}} 
+                {{#if id_aula.turma}} Turma: {{id_aula.turma}} / 
+                {{/if}} 
+                {{#if id_aula.lab}} Laboratório: {{id_aula.lab}} 
+                {{/if}} | 
+                Horário: {{id_aula.horario_inicio}} - {{id_aula.horario_fim}} | 
+                {{id_aula.dia_semana}} | 
+                Professor: {{id_aula.id_professor.nome_completo}}</h5>
+            <hr />
+            {{#each alunos}}
+                 <p>RA: {{id_aluno.ra}} / Nome: {{id_aluno.nome_completo}} / Status: {{status}} / Curso: {{id_aluno.id_curso.nome_curso}}</p>
+            {{/each}}
+            <a href="/admin/presencas/editar/{{_id}}"><button class="btn btn-success">Editar Lista de Presença</button></a>
+            <a href="/admin/presencas/deletar/{{_id}}"><button class="btn btn-danger">Deletar Lista de Presença</button></a>  
+        </div>
+    </div>
+{{else}}
+    <div class="card my-3">
+        <div class="card-body">       
+            <p class="card-title text-center">Nenhuma Lista de Presença registrada</p>
+        </div>
+    </div>
+{{/each}}

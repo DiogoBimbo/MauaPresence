@@ -6,11 +6,29 @@ const Aula = require("../models/aula");
 const Aluno = require("../models/aluno");
 const AlunoMateria = require("../models/alunoMateria");
 const Presenca = require("../models/presenca");
+const { sendPasswordResetEmail } = require("../utils/email");
+const wifiName = require("wifi-name");
+require('dotenv').config();
+
+
+function obterNomeRedeWifi() {
+  return new Promise((resolve, reject) => {
+    wifiName()
+      .then((nomeRede) => {
+        resolve(nomeRede);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
 
 function getCurrentDate() {
   const currentDate = new Date();
   const timezoneOffset = currentDate.getTimezoneOffset();
-  const adjustedDate = new Date(currentDate.getTime() - timezoneOffset * 60000);
+  const adjustedDate = new Date(
+    currentDate.getTime() - timezoneOffset * 60000
+  );
   return adjustedDate;
 }
 
@@ -25,7 +43,6 @@ function parseTime(timeString) {
 function isTimeBetween(currentTime, startTime, endTime) {
   return currentTime >= startTime && currentTime <= endTime;
 }
-
 router.get("/login", (req, res) => {
   res.render("aluno/login");
 });
@@ -37,7 +54,7 @@ router.get("/dashboard", async (req, res) => {
     return;
   }
   try {
-    const decoded = jwt.verify(token, "chave_secreta");
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     const aluno = await Aluno.findOne({ email: decoded.email });
     if (!aluno) {
       res.redirect("/aluno/login");
@@ -46,21 +63,29 @@ router.get("/dashboard", async (req, res) => {
     const alunoMateria = await AlunoMateria.findOne({
       id_aluno: aluno._id,
     }).lean();
-    if (!alunoMateria) {
-      res.render("aluno/dashboard", {
-        aluno: {
-          nome_completo: aluno.nome_completo,
-          email: aluno.email,
-          ra: aluno.ra,
+    const filter = {
+      $or: [
+        {
+          enum_aula: "Padrão",
+          id_materia: { $in: alunoMateria.id_materia },
           grupo: aluno.grupo,
           turma: aluno.turma,
           lab: aluno.lab,
         },
-        aulas: [],
-      });
-      return;
-    }
-    const idMaterias = alunoMateria.id_materia;
+        {
+          enum_aula: "Padrão",
+          id_materia: { $in: alunoMateria.id_materia },
+          grupo: aluno.grupo,
+          turma: aluno.turma,
+        },
+        {
+          enum_aula: "Padrão",
+          id_materia: { $in: alunoMateria.id_materia },
+          grupo: aluno.grupo,
+        },
+        { enum_aula: "Pae" },
+      ],
+    };
     const diasSemana = [
       "Domingo",
       "Segunda-feira",
@@ -73,7 +98,7 @@ router.get("/dashboard", async (req, res) => {
     const hoje = getCurrentDate().getUTCDay();
     const diaAtual = diasSemana[hoje];
     const aulas = await Aula.find({
-      id_materia: { $in: idMaterias },
+      ...filter,
       dia_semana: diaAtual,
     })
       .populate("id_materia")
@@ -105,7 +130,7 @@ router.post("/login", async (req, res) => {
     }
     const senhaCorreta = await bcrypt.compare(senha, aluno.senha);
     if (senhaCorreta) {
-      const token = jwt.sign({ email: aluno.email }, "chave_secreta");
+      const token = jwt.sign({ email: aluno.email }, process.env.TOKEN_SECRET);
       res.cookie("token", token);
       res.json({ success: true });
     } else {
@@ -122,6 +147,16 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
   const { codigo } = req.body;
 
   try {
+    const nomeRede = await obterNomeRedeWifi();
+    if (nomeRede !== "IDGS 5G") {
+      req.flash(
+        "error_msg",
+        "É necessário estar conectado à rede IDGS 5G para marcar presença."
+      );
+      res.redirect("/aluno/dashboard");
+      return;
+    }
+
     const aula = await Aula.findById(aulaId);
     if (!aula) {
       req.flash("error_msg", "Aula não encontrada");
@@ -136,7 +171,7 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
       return;
     }
 
-    const decoded = jwt.verify(token, "chave_secreta");
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     const aluno = await Aluno.findOne({ email: decoded.email });
     if (!aluno) {
       req.flash("error_msg", "Aluno não encontrado");
@@ -147,19 +182,19 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
     const presenca = await Presenca.findOne({
       id_aula: aula._id,
     });
-
     if (!presenca) {
       req.flash("error_msg", "Presença não encontrada");
       res.redirect("/aluno/dashboard");
       return;
     }
+
     if (presenca.codigo !== codigo) {
       req.flash("error_msg", "Código inválido");
       res.redirect("/aluno/dashboard");
       return;
     }
 
-    const currentDateTime = getCurrentDate();
+    const currentDateTime = new Date();
     const currentHours = Number(
       currentDateTime.toISOString().split("T")[1].split(":")[0]
     );
@@ -173,20 +208,21 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
     const endTime = parseTime(aula.horario_fim);
 
     if (isTimeBetween(currentTime, startTime, endTime)) {
-      // Verificar se o aluno já marcou presença
-      if (presenca.id_aluno.includes(aluno._id)) {
-        req.flash("error_msg", "Presença já marcada");
+      const alunoPresenca = presenca.alunos.find(
+        (alunoPresenca) =>
+          alunoPresenca.id_aluno.toString() === aluno._id.toString()
+      );
+
+      if (alunoPresenca) {
+        alunoPresenca.status = "presente";
+        await presenca.save();
+        req.flash("success_msg", "Presença marcada com sucesso");
+        res.redirect("/aluno/dashboard");
+      } else {
+        req.flash("error_msg", "Aluno não encontrado na presença");
         res.redirect("/aluno/dashboard");
         return;
       }
-
-      presenca.id_aluno.push(aluno._id);
-
-      presenca.status = "presente";
-      await presenca.save();
-
-      req.flash("success_msg", "Presença marcada com sucesso");
-      res.redirect("/aluno/dashboard");
     } else {
       req.flash(
         "error_msg",
@@ -201,9 +237,63 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
   }
 });
 
-router.get("/logout", (req, res) => {
-  res.clearCookie("token");
-  res.redirect("/aluno/login"); 
+router.post("/redefinir-senha", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const aluno = await Aluno.findOne({ email });
+    if (!aluno) {
+      res.json({ success: false, message: "Aluno não encontrado" });
+      return;
+    }
+    const resetToken = jwt.sign({ email: aluno.email }, process.env.TOKEN_SECRET, { expiresIn: "1h" });
+    const resetLink = `localhost:8000/aluno/redefinir-senha/${resetToken}`; 
+    aluno.resetToken = resetToken;
+    aluno.resetTokenExpiration = Date.now() + 3600000; // Expira em 1 hora
+    await aluno.save();
+    await sendPasswordResetEmail(email, resetLink);
+    res.json({ success: true, message: "Um email de redefinição de senha foi enviado para o seu endereço de email" });
+  } catch (error) {
+    console.error("Erro ao redefinir a senha do aluno:", error);
+    res.status(500).json({ success: false, message: "Erro ao redefinir a senha do aluno" });
+  }
 });
+
+router.get("/redefinir-senha/:resetToken", (req, res) => {
+  res.render("aluno/redefinir-senha", { resetToken: req.params.resetToken });
+});
+
+router.post("/redefinir-senha/:resetToken", async (req, res) => {
+  const salt = await bcrypt.genSalt(10);
+  const { resetToken } = req.params;
+  const { novaSenha } = req.body;
+
+  try {
+    const aluno = await Aluno.findOne({ resetToken });
+
+    if (!aluno) {
+      res.json({ success: false, message: "Token inválido ou expirado" });
+      return;
+    }
+
+    if (!novaSenha) {
+      res.json({ success: false, message: "Nova senha não fornecida" });
+      return;
+    }
+
+    const hash = await bcrypt.hash(novaSenha, salt);
+    aluno.senha = hash;
+    aluno.resetToken = null;
+    aluno.resetTokenExpiration = null;
+    await aluno.save();
+
+    res.json({ success: true, message: "Senha redefinida com sucesso" });
+  } catch (error) {
+    console.error("Erro ao redefinir a senha do aluno:", error);
+    res.status(500).json({ success: false, message: "Erro ao redefinir a senha do aluno" });
+  }
+});
+
+
 
 module.exports = router;

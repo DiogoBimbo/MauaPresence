@@ -1,0 +1,22 @@
+<h2>Cadastro de administradores</h2>
+<hr />
+<a href="/admin/administradores/cadastrar"><button
+    type="button"
+    class="btn btn-success"
+  >Adicionar administrador</button></a>
+
+{{#each administradores}}
+    <div class="card my-3">
+        <div class="card-body">
+            <h5>Email: {{email}}</h5>
+            <a href="/admin/administradores/editar/{{_id}}"><button class="btn btn-success">Editar Administrador</button></a>
+            <a href="/admin/administradores/deletar/{{_id}}"><button class="btn btn-danger">Deletar Administrador</button></a>   
+        </div>
+    </div>
+{{else}}
+    <div class="card my-3">
+        <div class="card-body">       
+            <p class="card-title text-center">Nenhum Professor registrado</p>
+        </div>
+    </div>
+{{/each}}
