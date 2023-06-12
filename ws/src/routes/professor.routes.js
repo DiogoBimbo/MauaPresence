@@ -7,6 +7,9 @@ const Professor = require("../models/professor");
 const Presenca = require("../models/presenca");
 const Aluno = require("../models/aluno");
 const AlunoMateria = require("../models/alunoMateria");
+const { sendPasswordResetEmail } = require("../utils/email");
+require('dotenv').config();
+
 
 
 function generateRandomCode() {
@@ -51,7 +54,7 @@ router.get("/dashboard", async (req, res) => {
     return;
   }
   try {
-    const decoded = jwt.verify(token, "chave_secreta");
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     const professor = await Professor.findOne({ email: decoded.email });
     if (!professor) {
       res.redirect("/professor/login");
@@ -86,7 +89,7 @@ router.post("/login", async (req, res) => {
     }
     const senhaCorreta = await bcrypt.compare(senha, professor.senha);
     if (senhaCorreta) {
-      const token = jwt.sign({ email: professor.email }, "chave_secreta");
+      const token = jwt.sign({ email: professor.email }, process.env.TOKEN_SECRET);
       res.cookie("token", token);
       return res.json({
         success: true,
@@ -184,5 +187,63 @@ router.get("/logout", (req, res) => {
   res.clearCookie("token");
   res.redirect("/professor/login");
 });
+
+router.post("/redefinir-senha", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const professor = await Professor.findOne({ email });
+    if (!professor) {
+      res.json({ success: false, message: "Professor não encontrado" });
+      return;
+    }
+    const resetToken = jwt.sign({ email: professor.email }, process.env.TOKEN_SECRET, { expiresIn: "1h" });
+    const resetLink = `localhost:8000/professor/redefinir-senha/${resetToken}`; 
+    professor.resetToken = resetToken;
+    professor.resetTokenExpiration = Date.now() + 3600000; // Expira em 1 hora
+    await professor.save();
+    await sendPasswordResetEmail(email, resetLink);
+    res.json({ success: true, message: "Um email de redefinição de senha foi enviado para o seu endereço de email" });
+  } catch (error) {
+    console.error("Erro ao redefinir a senha do professor:", error);
+    res.status(500).json({ success: false, message: "Erro ao redefinir a senha do aluno" });
+  }
+});
+
+router.get("/redefinir-senha/:resetToken", (req, res) => {
+  res.render("professor/redefinir-senha", { resetToken: req.params.resetToken });
+});
+
+router.post("/redefinir-senha/:resetToken", async (req, res) => {
+  const salt = await bcrypt.genSalt(10);
+  const { resetToken } = req.params;
+  const { novaSenha } = req.body;
+
+  try {
+    const professor = await Professor.findOne({ resetToken });
+
+    if (!professor) {
+      res.json({ success: false, message: "Token inválido ou expirado" });
+      return;
+    }
+
+    if (!novaSenha) {
+      res.json({ success: false, message: "Nova senha não fornecida" });
+      return;
+    }
+
+    const hash = await bcrypt.hash(novaSenha, salt);
+    professor.senha = hash;
+    professor.resetToken = null;
+    professor.resetTokenExpiration = null;
+    await professor.save();
+
+    res.json({ success: true, message: "Senha redefinida com sucesso" });
+  } catch (error) {
+    console.error("Erro ao redefinir a senha do professor:", error);
+    res.status(500).json({ success: false, message: "Erro ao redefinir a senha do professor" });
+  }
+});
+
 
 module.exports = router;
