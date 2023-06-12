@@ -15,7 +15,6 @@ const AlunoMateria = require("../models/alunoMateria");
 const Professor = require("../models/professor");
 const Aula = require("../models/aula");
 const Presenca = require("../models/presenca");
-const administrador = require("../models/administrador");
 
 // rota principal ADM
 router.get("/", async (req, res) => {
@@ -1623,7 +1622,7 @@ router.post("/administradores/novo", async (req, res) => {
     return;
   }
 
-  new administrador(novoAdm)
+  new Admin(novoAdm)
     .save()
     .then(() => {
       req.flash("success_msg", "Administrador cadastrado com sucesso");
