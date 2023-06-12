@@ -7,8 +7,9 @@ const Aluno = require("../models/aluno");
 const AlunoMateria = require("../models/alunoMateria");
 const Presenca = require("../models/presenca");
 const { sendPasswordResetEmail } = require("../utils/email");
-
 const wifiName = require("wifi-name");
+require('dotenv').config();
+
 
 function obterNomeRedeWifi() {
   return new Promise((resolve, reject) => {
@@ -42,7 +43,6 @@ function parseTime(timeString) {
 function isTimeBetween(currentTime, startTime, endTime) {
   return currentTime >= startTime && currentTime <= endTime;
 }
-
 router.get("/login", (req, res) => {
   res.render("aluno/login");
 });
@@ -54,7 +54,7 @@ router.get("/dashboard", async (req, res) => {
     return;
   }
   try {
-    const decoded = jwt.verify(token, "chave_secreta");
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     const aluno = await Aluno.findOne({ email: decoded.email });
     if (!aluno) {
       res.redirect("/aluno/login");
@@ -130,7 +130,7 @@ router.post("/login", async (req, res) => {
     }
     const senhaCorreta = await bcrypt.compare(senha, aluno.senha);
     if (senhaCorreta) {
-      const token = jwt.sign({ email: aluno.email }, "chave_secreta");
+      const token = jwt.sign({ email: aluno.email }, process.env.TOKEN_SECRET);
       res.cookie("token", token);
       res.json({ success: true });
     } else {
@@ -171,7 +171,7 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
       return;
     }
 
-    const decoded = jwt.verify(token, "chave_secreta");
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     const aluno = await Aluno.findOne({ email: decoded.email });
     if (!aluno) {
       req.flash("error_msg", "Aluno não encontrado");
@@ -246,7 +246,7 @@ router.post("/redefinir-senha", async (req, res) => {
       res.json({ success: false, message: "Aluno não encontrado" });
       return;
     }
-    const resetToken = jwt.sign({ email: aluno.email }, "chave_secreta", { expiresIn: "1h" });
+    const resetToken = jwt.sign({ email: aluno.email }, process.env.TOKEN_SECRET, { expiresIn: "1h" });
     const resetLink = `localhost:8000/aluno/redefinir-senha/${resetToken}`; 
     aluno.resetToken = resetToken;
     aluno.resetTokenExpiration = Date.now() + 3600000; // Expira em 1 hora

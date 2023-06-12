@@ -1,16 +1,18 @@
 const nodemailer = require("nodemailer");
+require('dotenv').config();
+
 
 async function sendPasswordResetEmail(email, resetLink) {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "mauapresence@gmail.com",
-        pass: "uwjisbbovlkqifke",
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
     const mailOptions = {
-      from: "mauapresence@gmail.com",
+      from: process.env.EMAIL_ADDRESS,
       to: email,
       subject: "Redefinição de senha",
       html: `<p>Clique no link abaixo para redefinir sua senha:</p><a href="${resetLink}">${resetLink}</a>`,

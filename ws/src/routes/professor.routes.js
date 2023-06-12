@@ -8,6 +8,7 @@ const Presenca = require("../models/presenca");
 const Aluno = require("../models/aluno");
 const AlunoMateria = require("../models/alunoMateria");
 const { sendPasswordResetEmail } = require("../utils/email");
+require('dotenv').config();
 
 
 
@@ -53,7 +54,7 @@ router.get("/dashboard", async (req, res) => {
     return;
   }
   try {
-    const decoded = jwt.verify(token, "chave_secreta");
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     const professor = await Professor.findOne({ email: decoded.email });
     if (!professor) {
       res.redirect("/professor/login");
@@ -88,7 +89,7 @@ router.post("/login", async (req, res) => {
     }
     const senhaCorreta = await bcrypt.compare(senha, professor.senha);
     if (senhaCorreta) {
-      const token = jwt.sign({ email: professor.email }, "chave_secreta");
+      const token = jwt.sign({ email: professor.email }, process.env.TOKEN_SECRET);
       res.cookie("token", token);
       return res.json({
         success: true,
@@ -196,7 +197,7 @@ router.post("/redefinir-senha", async (req, res) => {
       res.json({ success: false, message: "Professor não encontrado" });
       return;
     }
-    const resetToken = jwt.sign({ email: professor.email }, "chave_secreta", { expiresIn: "1h" });
+    const resetToken = jwt.sign({ email: professor.email }, process.env.TOKEN_SECRET, { expiresIn: "1h" });
     const resetLink = `localhost:8000/professor/redefinir-senha/${resetToken}`; 
     professor.resetToken = resetToken;
     professor.resetTokenExpiration = Date.now() + 3600000; // Expira em 1 hora
