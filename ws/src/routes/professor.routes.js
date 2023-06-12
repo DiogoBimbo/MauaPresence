@@ -118,6 +118,11 @@ router.post("/gerar-codigo/:aulaId", async (req, res) => {
         .status(404)
         .json({ success: false, message: "Aula não encontrada." });
     }
+    const existingPresenca = await Presenca.findOne({ id_aula: aulaId });
+    if (existingPresenca) {
+      req.flash("error_msg", "Já existe um código de presença gerado para esta aula.");
+      return res.status(400).json({ success: false, message: "Já existe um código de presença gerado para esta aula." });
+    }
     const currentDateTime = getCurrentDateTime();
     const currentHours = Number(currentDateTime.split(" ")[1].split(":")[0]);
     const currentMinutes = Number(currentDateTime.split(" ")[1].split(":")[1]);
