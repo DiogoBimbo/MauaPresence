@@ -123,6 +123,7 @@ router.post("/gerar-codigo/:aulaId", async (req, res) => {
       req.flash("error_msg", "Já existe um código de presença gerado para esta aula.");
       return res.status(400).json({ success: false, message: "Já existe um código de presença gerado para esta aula." });
     }
+    
     const currentDateTime = getCurrentDateTime();
     const currentHours = Number(currentDateTime.split(" ")[1].split(":")[0]);
     const currentMinutes = Number(currentDateTime.split(" ")[1].split(":")[1]);
