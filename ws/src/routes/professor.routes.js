@@ -60,24 +60,37 @@ router.get("/dashboard", async (req, res) => {
       res.redirect("/professor/login");
       return;
     }
-    const aulas = await Aula.find({ id_professor: professor._id })
+    const diasSemana = [
+      "Domingo",
+      "Segunda-feira",
+      "Terça-feira",
+      "Quarta-feira",
+      "Quinta-feira",
+      "Sexta-feira",
+      "Sábado",
+    ];
+    const today = new Date().getDay();
+    const currentDayOfWeek = diasSemana[today];
+    
+    const aulas = await Aula.find({
+      id_professor: professor._id,
+      dia_semana: currentDayOfWeek,
+    })
       .populate("id_materia")
       .lean();
-    const aulasComNomeMateria = aulas.map((aula) => ({
-      ...aula,
-      nome_materia: aula.id_materia.nome,
-    }));
+    
     res.render("professor/dashboard", {
       nome_completo: professor.nome_completo,
       email: professor.email,
       ra: professor.ra,
-      aulas: aulasComNomeMateria,
+      aulas: aulas,
     });
   } catch (error) {
-    console.error("Erro ao verificar token:", error);
-    res.redirect("/professor/login");
+    console.error("Erro ao exibir o dashboard do professor:", error);
+    res.status(500).json({ message: "Erro ao exibir o dashboard do professor." });
   }
 });
+
 
 router.post("/login", async (req, res) => {
   const { email, senha } = req.body;
