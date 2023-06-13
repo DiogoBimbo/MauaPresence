@@ -49,7 +49,7 @@ router.get("/login", (req, res) => {
 
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
-  res.redirect("/aluno/login");
+  res.redirect("/");
 });
 
 router.get("/dashboard", async (req, res) => {

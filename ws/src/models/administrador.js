@@ -9,7 +9,15 @@ const administradorSchema = new Schema({
     senha: {
         type: String,
         required: true
-    }
+    },
+    resetToken: {
+        type: String,
+        default: null,
+      },
+      resetTokenExpiration: {
+        type: Date,
+        default: null,
+      },
   });
 
 module.exports = mongoose.model('Adminstrador', administradorSchema);

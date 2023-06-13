@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 const admin = require("./src/routes/admin.routes");
 const aluno = require("./src/routes/aluno.routes");
 const professor = require("./src/routes/professor.routes");
+const loginH = require("./src/routes/login.routes")
 require("./database");
 
 //Configs
@@ -47,6 +48,7 @@ app.set("port", 8000);
 app.use("/admin", admin);
 app.use("/aluno", aluno);
 app.use("/professor", professor);
+app.use("/", loginH);
 
 app.listen(app.get("port"), () => {
   console.log(`WS escutando na porta ${app.get("port")}`);

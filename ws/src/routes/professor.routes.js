@@ -204,7 +204,7 @@ function isTimeBetween(time, startTime, endTime) {
 
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
-  res.redirect("/professor/login");
+  res.redirect("/");
 });
 
 router.post("/redefinir-senha", async (req, res) => {

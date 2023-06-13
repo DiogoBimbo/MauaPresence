@@ -1,17 +1,17 @@
 <h3>Redefinir senha:</h3>
 <div class="card">
   <div class="card-body">
-    <input type="password" id="novaSenha" name="novaSenha" placeholder="Nova senha do aluno" class="form-control" />
+    <input type="password" id="novaSenha" name="novaSenha" placeholder="Nova senha" class="form-control" />
   </div>
 </div>
 <button id="redefinirSenhaButton" class="btn btn-success mt-3">Redefinir senha</button>
 
 <script>
   document.getElementById("redefinirSenhaButton").addEventListener("click", function() {
-    const resetToken = window.location.pathname.split('/').pop();
+    const resetToken = window.location.pathname.split('/')[2];
     const novaSenha = document.getElementById("novaSenha").value;
 
-    fetch(`/aluno/redefinir-senha/${resetToken}`, {
+    fetch(`/login/redefinir-senha/${resetToken}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -31,4 +31,5 @@
       alert("Ocorreu um erro ao redefinir a senha. Tente novamente mais tarde.");
     });
   });
+
 </script>
