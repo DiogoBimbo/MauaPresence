@@ -10,8 +10,6 @@ const AlunoMateria = require("../models/alunoMateria");
 const { sendPasswordResetEmail } = require("../utils/email");
 require('dotenv').config();
 
-
-
 function generateRandomCode() {
   const length = 5;
   const characters = "0123456789";
@@ -42,10 +40,6 @@ function parseTime(time) {
   parsedTime.setMinutes(Number(minutes));
   return parsedTime;
 }
-
-router.get("/login", (req, res) => {
-  res.render("professor/login");
-});
 
 router.get("/dashboard", async (req, res) => {
   const token = req.cookies.token;
@@ -88,36 +82,6 @@ router.get("/dashboard", async (req, res) => {
   } catch (error) {
     console.error("Erro ao exibir o dashboard do professor:", error);
     res.status(500).json({ message: "Erro ao exibir o dashboard do professor." });
-  }
-});
-
-
-router.post("/login", async (req, res) => {
-  const { email, senha } = req.body;
-  try {
-    const professor = await Professor.findOne({ email });
-    if (!professor) {
-      req.flash("error_msg", "Professor não encontrado.");
-      return res.json({ success: false, message: "Professor não encontrado." });
-    }
-    const senhaCorreta = await bcrypt.compare(senha, professor.senha);
-    if (senhaCorreta) {
-      const token = jwt.sign({ email: professor.email }, process.env.TOKEN_SECRET);
-      res.cookie("token", token);
-      return res.json({
-        success: true,
-        message: "Login realizado com sucesso.",
-      });
-    } else {
-      req.flash("error_msg", "Senha incorreta.");
-      return res.json({ success: false, message: "Senha incorreta." });
-    }
-  } catch (error) {
-    console.error("Erro ao realizar login:", error);
-    return res.json({
-      success: false,
-      message: "Ocorreu um erro ao realizar o login.",
-    });
   }
 });
 
