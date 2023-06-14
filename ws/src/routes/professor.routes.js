@@ -60,24 +60,37 @@ router.get("/dashboard", async (req, res) => {
       res.redirect("/professor/login");
       return;
     }
-    const aulas = await Aula.find({ id_professor: professor._id })
+    const diasSemana = [
+      "Domingo",
+      "Segunda-feira",
+      "Terça-feira",
+      "Quarta-feira",
+      "Quinta-feira",
+      "Sexta-feira",
+      "Sábado",
+    ];
+    const today = new Date().getDay();
+    const currentDayOfWeek = diasSemana[today];
+    
+    const aulas = await Aula.find({
+      id_professor: professor._id,
+      dia_semana: currentDayOfWeek,
+    })
       .populate("id_materia")
       .lean();
-    const aulasComNomeMateria = aulas.map((aula) => ({
-      ...aula,
-      nome_materia: aula.id_materia.nome,
-    }));
+    
     res.render("professor/dashboard", {
       nome_completo: professor.nome_completo,
       email: professor.email,
       ra: professor.ra,
-      aulas: aulasComNomeMateria,
+      aulas: aulas,
     });
   } catch (error) {
-    console.error("Erro ao verificar token:", error);
-    res.redirect("/professor/login");
+    console.error("Erro ao exibir o dashboard do professor:", error);
+    res.status(500).json({ message: "Erro ao exibir o dashboard do professor." });
   }
 });
+
 
 router.post("/login", async (req, res) => {
   const { email, senha } = req.body;
@@ -118,6 +131,12 @@ router.post("/gerar-codigo/:aulaId", async (req, res) => {
         .status(404)
         .json({ success: false, message: "Aula não encontrada." });
     }
+    const existingPresenca = await Presenca.findOne({ id_aula: aulaId });
+    if (existingPresenca) {
+      req.flash("error_msg", "Já existe um código de presença gerado para esta aula.");
+      return res.status(400).json({ success: false, message: "Já existe um código de presença gerado para esta aula." });
+    }
+    
     const currentDateTime = getCurrentDateTime();
     const currentHours = Number(currentDateTime.split(" ")[1].split(":")[0]);
     const currentMinutes = Number(currentDateTime.split(" ")[1].split(":")[1]);
@@ -185,7 +204,7 @@ function isTimeBetween(time, startTime, endTime) {
 
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
-  res.redirect("/professor/login");
+  res.redirect("/");
 });
 
 router.post("/redefinir-senha", async (req, res) => {

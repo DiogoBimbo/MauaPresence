@@ -47,6 +47,11 @@ router.get("/login", (req, res) => {
   res.render("aluno/login");
 });
 
+router.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.redirect("/");
+});
+
 router.get("/dashboard", async (req, res) => {
   const token = req.cookies.token;
   if (!token) {
@@ -116,7 +121,7 @@ router.get("/dashboard", async (req, res) => {
     });
   } catch (error) {
     console.error("Erro ao exibir o dashboard do aluno:", error);
-    res.status(500).json({ message: "Erro ao exibir o dashboard do aluno" });
+    res.status(500).json({ message: "Erro ao exibir o dashboard do aluno - O aluno não foi atribuido á nenhuma matéria" });
   }
 });
 
@@ -148,10 +153,10 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
 
   try {
     const nomeRede = await obterNomeRedeWifi();
-    if (nomeRede !== "IDGS 5G") {
+    if (nomeRede !== "IMT" && nomeRede !== "MAUA") {
       req.flash(
         "error_msg",
-        "É necessário estar conectado à rede IDGS 5G para marcar presença."
+        "É necessário estar conectado à rede da Mauá para marcar presença."
       );
       res.redirect("/aluno/dashboard");
       return;
