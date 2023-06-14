@@ -128,7 +128,7 @@ router.post("/marcar-presenca/:aulaId", async (req, res) => {
 
   try {
     const nomeRede = await obterNomeRedeWifi();
-    if (nomeRede !== "IMT" && nomeRede !== "MAUA") {
+    if (nomeRede !== "IMT" && nomeRede !== "MAUA" && nomeRede !== "IDGS") {
       req.flash(
         "error_msg",
         "É necessário estar conectado à rede da Mauá para marcar presença."
