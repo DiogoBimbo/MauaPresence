@@ -43,9 +43,6 @@ function parseTime(timeString) {
 function isTimeBetween(currentTime, startTime, endTime) {
   return currentTime >= startTime && currentTime <= endTime;
 }
-router.get("/login", (req, res) => {
-  res.render("aluno/login");
-});
 
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
@@ -122,28 +119,6 @@ router.get("/dashboard", async (req, res) => {
   } catch (error) {
     console.error("Erro ao exibir o dashboard do aluno:", error);
     res.status(500).json({ message: "Erro ao exibir o dashboard do aluno - O aluno não foi atribuido á nenhuma matéria" });
-  }
-});
-
-router.post("/login", async (req, res) => {
-  const { email, senha } = req.body;
-  try {
-    const aluno = await Aluno.findOne({ email });
-    if (!aluno) {
-      res.json({ success: false });
-      return;
-    }
-    const senhaCorreta = await bcrypt.compare(senha, aluno.senha);
-    if (senhaCorreta) {
-      const token = jwt.sign({ email: aluno.email }, process.env.TOKEN_SECRET);
-      res.cookie("token", token);
-      res.json({ success: true });
-    } else {
-      res.json({ success: false });
-    }
-  } catch (error) {
-    console.error("Erro ao fazer login:", error);
-    res.json({ success: false });
   }
 });
 

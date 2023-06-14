@@ -48,7 +48,7 @@ router.post("/login", async (req, res) => {
           process.env.TOKEN_SECRET
         );
         res.cookie("token", token);
-        return res.json({ success: true, redirectUrl: "/admin/dashboard" });
+        return res.json({ success: true, redirectUrl: "/admin" });
       }
     }
 
