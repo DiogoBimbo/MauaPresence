@@ -6,7 +6,36 @@ const Professor = require("../models/professor");
 const Admin = require("../models/administrador");
 const router = express.Router();
 const { sendPasswordResetEmail } = require("../utils/email");
+const nodemailer = require('nodemailer');
 require("dotenv").config();
+
+// Defina as configurações do transporte de email
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_ADDRESS,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
+
+router.post('/enviar-email', async (req, res) => {
+  const { mensagem } = req.body;
+
+  try {
+    // Enviar o email
+    await transporter.sendMail({
+      from: process.env.EMAIL_ADDRESS,
+      to: process.env.EMAIL_ADDRESS,
+      subject: 'Mensagem do Suporte',
+      text: mensagem,
+    });
+
+    return res.status(200).json({ success: true, message: 'Email enviado com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao enviar email:', error);
+    return res.status(500).json({ success: false, message: 'Erro ao enviar email.' });
+  }
+});
 
 router.get("/", async (req, res) => {
   res.render("loginHome");
